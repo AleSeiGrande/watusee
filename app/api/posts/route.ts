@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import crypto from 'crypto';
 import { auth } from '@/auth';
+import { resolveUploadFile } from '@/lib/uploads';
 
 function getDataDir() {
   if (process.env.DATABASE_URL?.startsWith('file:/')) {
@@ -19,7 +20,7 @@ function getDataDir() {
 // POST /api/posts — crea un nuevo post (pareidolia).
 // Recibe JSON con: title, description, originalImage (base64), drawnImage (base64),
 // audience ("everyone"|"adults"), remixOfId (opcional).
-// Si audience === "adults", las imágenes se guardan en /uploads/adults/ (separadas).
+// Si audience === "adults", las imágenes se guardan en public/uploads/adults/ (separadas).
 export async function POST(req: Request) {
   try {
     const session = await auth();
@@ -45,36 +46,33 @@ export async function POST(req: Request) {
 
     // Guarda imagen: si es ruta copia el archivo, si es base64 lo decodifica y escribe
     const saveImage = async (input: string, prefix: string) => {
-      let relativePath;
+      let filename;
       if (input.startsWith('/')) {
-        const existingPath = path.join(process.cwd(), 'public', input);
         const ext = path.extname(input) || '.png';
-        const filename = `${prefix}-${crypto.randomBytes(8).toString('hex')}${ext}`;
+        filename = `${prefix}-${crypto.randomBytes(8).toString('hex')}${ext}`;
         const destPath = path.join(uploadsDir, filename);
         try {
+          const existingPath = (await resolveUploadFile(input)) ?? path.join(process.cwd(), 'public', input);
           await fs.copyFile(existingPath, destPath);
         } catch {
           await fs.writeFile(destPath, input);
         }
-        relativePath = `/${subDir}/${filename}`;
       } else {
         const base64Data = input.replace(/^data:image\/\w+;base64,/, '');
         const buffer = Buffer.from(base64Data, 'base64');
-        const filename = `${prefix}-${crypto.randomBytes(8).toString('hex')}.png`;
+        filename = `${prefix}-${crypto.randomBytes(8).toString('hex')}.png`;
         const filepath = path.join(uploadsDir, filename);
         await fs.writeFile(filepath, buffer);
-        relativePath = `/${subDir}/${filename}`;
       }
       // Dual save to data/ for persistence across deploys
       const dataDir = getDataDir();
       if (dataDir) {
         const dataSubDir = path.join(dataDir, subDir);
         try { await fs.access(dataSubDir); } catch { await fs.mkdir(dataSubDir, { recursive: true }); }
-        const filename = path.basename(relativePath);
         const src = path.join(uploadsDir, filename);
         try { await fs.copyFile(src, path.join(dataSubDir, filename)); } catch {}
       }
-      return relativePath;
+      return `/api/uploads/${filename}`;
     };
 
     const originalImageUrl = await saveImage(originalImage, 'original');

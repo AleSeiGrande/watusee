@@ -1,19 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
-import fs from 'fs/promises';
-import path from 'path';
-
-function getDataDir() {
-  if (process.env.DATABASE_URL?.startsWith('file:/')) {
-    const dbPath = process.env.DATABASE_URL.slice(5);
-    return path.join(path.dirname(dbPath), 'uploads', 'play');
-  }
-  const cwd = process.cwd();
-  const match = cwd.match(/^(\/home\/[^/]+\/domains\/[^/]+)/);
-  if (match) return path.join(match[1], 'data', 'uploads', 'play');
-  return null;
-}
+import { unlinkUploadFile } from '@/lib/uploads';
 
 export async function DELETE(
   req: NextRequest,
@@ -41,14 +29,7 @@ export async function DELETE(
     });
 
     if (remixCount === 0) {
-      const uploadPath = path.join(process.cwd(), 'public', image.imageUrl);
-      try { await fs.unlink(uploadPath); } catch {}
-
-      const dataDir = getDataDir();
-      if (dataDir) {
-        const filename = path.basename(image.imageUrl);
-        try { await fs.unlink(path.join(dataDir, filename)); } catch {}
-      }
+      await unlinkUploadFile(image.imageUrl);
     }
 
     await prisma.playImage.delete({ where: { id } });

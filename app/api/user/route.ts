@@ -67,7 +67,7 @@ export const PATCH = auth(async (req) => {
   const filepath = path.join(uploadsDir, filename);
   await fs.writeFile(filepath, buffer);
 
-  const imageUrl = `/uploads/${filename}`;
+  const imageUrl = `/api/uploads/${filename}`;
 
   const user = await prisma.user.update({
     where: { id: session.user.id },

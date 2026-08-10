@@ -47,7 +47,7 @@ export async function POST(req: Request) {
       await fs.writeFile(path.join(dataDir, filename), buffer);
     }
 
-    const imageUrl = `/play/uploads/${filename}`;
+    const imageUrl = `/api/uploads/${filename}`;
 
     const playImage = await prisma.playImage.create({
       data: {

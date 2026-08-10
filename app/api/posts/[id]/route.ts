@@ -1,19 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
-import fs from 'fs/promises';
-import path from 'path';
-
-function getDataDir() {
-  if (process.env.DATABASE_URL?.startsWith('file:/')) {
-    const dbPath = process.env.DATABASE_URL.slice(5);
-    return path.join(path.dirname(dbPath), 'uploads');
-  }
-  const cwd = process.cwd();
-  const match = cwd.match(/^(\/home\/[^/]+\/domains\/[^/]+)/);
-  if (match) return path.join(match[1], 'data', 'uploads');
-  return null;
-}
+import { unlinkUploadFile } from '@/lib/uploads';
 
 // Helper para crear notificación al autor del post
 async function notifyAuthor(postId: string, actorId: string, type: string, detail: string) {
@@ -110,15 +98,9 @@ export async function DELETE(
     }
 
     // Elimina los archivos de imagen (public y data persistente)
-    const dataDir = getDataDir();
     for (const url of [post.originalImage, post.interpretedImage]) {
       if (!url) continue;
-      const publicPath = path.join(process.cwd(), 'public', url);
-      try { await fs.unlink(publicPath); } catch {}
-      if (dataDir) {
-        const dataPath = path.join(dataDir, url);
-        try { await fs.unlink(dataPath); } catch {}
-      }
+      await unlinkUploadFile(url);
     }
 
     await prisma.post.delete({ where: { id } });

@@ -1,6 +1,19 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
+import fs from 'fs/promises';
+import path from 'path';
+
+function getDataDir() {
+  if (process.env.DATABASE_URL?.startsWith('file:/')) {
+    const dbPath = process.env.DATABASE_URL.slice(5);
+    return path.join(path.dirname(dbPath), 'uploads');
+  }
+  const cwd = process.cwd();
+  const match = cwd.match(/^(\/home\/[^/]+\/domains\/[^/]+)/);
+  if (match) return path.join(match[1], 'data', 'uploads');
+  return null;
+}
 
 // Helper para crear notificación al autor del post
 async function notifyAuthor(postId: string, actorId: string, type: string, detail: string) {
@@ -65,5 +78,54 @@ export async function POST(
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json({ error: 'Error interno' }, { status: 500 });
+  }
+}
+
+// DELETE /api/posts/[id] — elimina un post del autor (y sus archivos de imagen).
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+    }
+
+    const { id } = await params;
+    const post = await prisma.post.findUnique({
+      where: { id },
+      include: { _count: { select: { remixes: true } } },
+    });
+    if (!post) {
+      return NextResponse.json({ error: 'Post no encontrado' }, { status: 404 });
+    }
+
+    if (post.authorId !== session.user.id) {
+      return NextResponse.json({ error: 'No tienes permiso para borrar este post' }, { status: 403 });
+    }
+
+    if (post._count.remixes > 0) {
+      return NextResponse.json({ error: 'Este post tiene remixes; no se puede borrar' }, { status: 409 });
+    }
+
+    // Elimina los archivos de imagen (public y data persistente)
+    const dataDir = getDataDir();
+    for (const url of [post.originalImage, post.interpretedImage]) {
+      if (!url) continue;
+      const publicPath = path.join(process.cwd(), 'public', url);
+      try { await fs.unlink(publicPath); } catch {}
+      if (dataDir) {
+        const dataPath = path.join(dataDir, url);
+        try { await fs.unlink(dataPath); } catch {}
+      }
+    }
+
+    await prisma.post.delete({ where: { id } });
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
   }
 }

@@ -9,7 +9,7 @@ interface PareidoliaCanvasProps {
   initialImage?: string;
 }
 
-type Tool = 'brush' | 'circle' | 'rect' | 'triangle' | 'fill';
+type Tool = 'brush' | 'eraser' | 'circle' | 'rect' | 'triangle' | 'fill';
 
 interface ShapeObject {
   id: string;
@@ -398,10 +398,11 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
       return;
     }
 
-    if (tool === 'brush') {
+    if (tool === 'brush' || tool === 'eraser') {
       saveBrushState();
       isDrawingRef.current = true;
       if (bc) {
+        bc.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over';
         bc.beginPath();
         bc.moveTo(pos.x, pos.y);
         bc.strokeStyle = color;
@@ -456,7 +457,7 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
     const pos = getPos(e);
     const bc = brushCanvasRef.current?.getContext('2d');
 
-    if (tool === 'brush' && isDrawingRef.current && bc) {
+    if ((tool === 'brush' || tool === 'eraser') && isDrawingRef.current && bc) {
       bc.lineTo(pos.x, pos.y);
       bc.stroke();
       // Render brush progress onto main canvas
@@ -535,6 +536,8 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
 
     if (isDrawingRef.current) {
       isDrawingRef.current = false;
+      const bc = brushCanvasRef.current?.getContext('2d');
+      if (bc) bc.globalCompositeOperation = 'source-over';
       return;
     }
 
@@ -665,6 +668,7 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
   // --- Render ---
   const TOOLS: { id: Tool; icon: React.ReactNode }[] = [
     { id: 'brush', icon: <Pencil className="w-4 h-4 sm:w-5 sm:h-5" /> },
+    { id: 'eraser', icon: <Eraser className="w-4 h-4 sm:w-5 sm:h-5" /> },
     { id: 'fill', icon: <Droplets className="w-4 h-4 sm:w-5 sm:h-5" /> },
     { id: 'circle', icon: <Circle className="w-4 h-4 sm:w-5 sm:h-5" /> },
     { id: 'rect', icon: <Square className="w-4 h-4 sm:w-5 sm:h-5" /> },
@@ -748,9 +752,6 @@ export default function PareidoliaCanvas({ onSave, initialImage }: PareidoliaCan
               )}
               <button onClick={undo} disabled={historyRef.current.length === 0} className="p-1.5 sm:p-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed" title={t('canvas.undo')}>
                 <Undo className="w-4 h-4 sm:w-5 sm:h-5" />
-              </button>
-              <button onClick={clearCanvas} className="p-1.5 sm:p-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors" title={t('canvas.clear')}>
-                <Eraser className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
               <button onClick={() => setImage(null)} className="p-1.5 sm:p-2 text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors" title={t('canvas.change')}>
                 <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />

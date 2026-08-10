@@ -9,9 +9,12 @@ process.on('unhandledRejection', (reason) => {
   console.error('[start] UNHANDLED REJECTION:', reason);
 });
 
+process.env.WATUSEE_ROOT = __dirname;
+
 const port = parseInt(process.env.PORT || '3000', 10);
 console.log('[start] Node version:', process.version);
 console.log('[start] CWD:', process.cwd());
+console.log('[start] WATUSEE_ROOT:', process.env.WATUSEE_ROOT);
 console.log('[start] NODE_ENV:', process.env.NODE_ENV);
 console.log('[start] Starting Next.js...');
 

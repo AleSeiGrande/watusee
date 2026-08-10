@@ -33,37 +33,42 @@ function rewrite(url: string): string {
 }
 
 export async function GET() {
-  let updated = 0;
-  const perModel: Record<string, number> = {};
-  for (const [model, fields] of FIELDS) {
-    const delegate = (prisma as unknown as Record<string, Delegate>)[model];
-    if (!delegate) continue;
-    const rows = await delegate.findMany({
-      select: Object.fromEntries(fields.map((f) => [f, true])),
-    });
-    let n = 0;
-    for (const row of rows) {
-      const data: Record<string, string> = {};
-      let changed = false;
-      for (const f of fields) {
-        const val: unknown = row[f];
-        if (typeof val === 'string') {
-          const nv = rewrite(val);
-          if (nv !== val) {
-            data[f] = nv;
-            changed = true;
+  try {
+    let updated = 0;
+    const perModel: Record<string, number> = {};
+    for (const [model, fields] of FIELDS) {
+      const delegate = (prisma as unknown as Record<string, Delegate>)[model];
+      if (!delegate) continue;
+      const rows = await delegate.findMany({
+        select: Object.fromEntries([['id', true], ...fields.map((f) => [f, true])]),
+      });
+      let n = 0;
+      for (const row of rows) {
+        const data: Record<string, string> = {};
+        let changed = false;
+        for (const f of fields) {
+          const val: unknown = row[f];
+          if (typeof val === 'string') {
+            const nv = rewrite(val);
+            if (nv !== val) {
+              data[f] = nv;
+              changed = true;
+            }
           }
         }
+        if (changed) {
+          await delegate.update({ where: { id: row.id }, data });
+          n++;
+        }
       }
-      if (changed) {
-        await delegate.update({ where: { id: row.id }, data });
-        n++;
+      if (n > 0) {
+        perModel[model] = n;
+        updated += n;
       }
     }
-    if (n > 0) {
-      perModel[model] = n;
-      updated += n;
-    }
+    return NextResponse.json({ updated, perModel });
+  } catch (error) {
+    console.error('Migration error:', error);
+    return NextResponse.json({ error: String(error) }, { status: 500 });
   }
-  return NextResponse.json({ updated, perModel });
 }

@@ -51,11 +51,26 @@ export async function POST(req: Request) {
         const ext = path.extname(input) || '.png';
         filename = `${prefix}-${crypto.randomBytes(8).toString('hex')}${ext}`;
         const destPath = path.join(uploadsDir, filename);
+        // Try to find the file locally first
+        let copied = false;
         try {
           const existingPath = (await resolveUploadFile(input)) ?? path.join(process.cwd(), 'public', input);
           await fs.copyFile(existingPath, destPath);
+          copied = true;
         } catch {
-          await fs.writeFile(destPath, input);
+          // File not found locally — fetch via HTTP from our own API
+        }
+        if (!copied) {
+          try {
+            const origin = process.env.AUTH_URL || 'http://localhost:3000';
+            const res = await fetch(`${origin}${input}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const buffer = Buffer.from(await res.arrayBuffer());
+            await fs.writeFile(destPath, buffer);
+          } catch (fetchErr) {
+            console.error(`Failed to fetch image ${input}:`, fetchErr);
+            throw new Error(`Could not save image: ${input}`);
+          }
         }
       } else {
         const base64Data = input.replace(/^data:image\/\w+;base64,/, '');

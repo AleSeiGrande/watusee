@@ -56,9 +56,20 @@ export default function PostCard({ id, originalImage, interpretedImage, author, 
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'react', type }),
       });
+      if (res.status === 401) {
+        router.push('/login');
+        return;
+      }
       if (res.ok) {
         const data = await res.json();
-        setReactions((prev) => ({ ...prev, [type]: data.count }));
+        setReactions((prev) => {
+          const next = { ...prev };
+          if (data.prevType && data.prevType !== type) {
+            next[data.prevType] = Math.max(0, (next[data.prevType] || 1) - 1);
+          }
+          next[type] = data.count;
+          return next;
+        });
         setMyReaction(data.reacted ? type : null);
       }
     } catch (err) {

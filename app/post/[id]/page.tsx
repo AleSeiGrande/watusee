@@ -6,12 +6,15 @@ import { PenTool, ArrowLeft, ArrowRight } from "lucide-react";
 import PostCard from "@/components/PostCard";
 import T from '@/components/T';
 import CommentsSection from "@/components/CommentsSection";
+import { auth } from "@/auth";
 
 export const dynamic = 'force-dynamic';
 
 export default async function PostPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  
+  const session = await auth();
+  const userId = session?.user?.id;
+
   const post = await prisma.post.findUnique({
     where: { id },
     include: {
@@ -22,6 +25,9 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
           _count: {
             select: { remixes: true },
           },
+          reactions: {
+            select: { type: true, userId: true },
+          },
         },
         orderBy: {
           createdAt: 'desc',
@@ -30,12 +36,28 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
       _count: {
         select: { remixes: true },
       },
+      reactions: {
+        select: { type: true, userId: true },
+      },
     },
   });
 
   if (!post) {
     notFound();
   }
+
+  const processReactions = (reactions: { type: string; userId: string }[]) => {
+    const reactionCounts: Record<string, number> = {};
+    let userReaction: string | null = null;
+    for (const r of reactions) {
+      reactionCounts[r.type] = (reactionCounts[r.type] || 0) + 1;
+      if (userId && r.userId === userId) userReaction = r.type;
+    }
+    return { reactionCounts, userReaction };
+  };
+
+  const postReactions = processReactions(post.reactions);
+  const totalLikes = Object.values(postReactions.reactionCounts).reduce((a, b) => a + b, 0);
 
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -80,7 +102,7 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
               </div>
               <div className="w-px h-12 bg-dark-glass-border mx-2" />
               <div className="flex flex-col items-center">
-                <span className="text-3xl font-bold text-white">{post.likes}</span>
+                <span className="text-3xl font-bold text-white">{totalLikes}</span>
                 <span className="text-sm text-gray-400 uppercase tracking-wider"><T id="post.likes" /></span>
               </div>
             </div>
@@ -123,20 +145,25 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {post.remixes.map((remix) => (
-              <PostCard
-                key={remix.id}
-                id={remix.id}
-                title={remix.title}
-                author={remix.author.username}
-                originalImage={remix.originalImage}
-                interpretedImage={remix.interpretedImage}
-                likes={remix.likes}
-                comments={remix.commentsCount}
-                remixesCount={remix._count.remixes}
-                hideOriginal={true}
-              />
-            ))}
+            {post.remixes.map((remix) => {
+              const remixReactions = processReactions(remix.reactions);
+              return (
+                <PostCard
+                  key={remix.id}
+                  id={remix.id}
+                  title={remix.title}
+                  author={remix.author.username}
+                  originalImage={remix.originalImage}
+                  interpretedImage={remix.interpretedImage}
+                  likes={remix.likes}
+                  comments={remix.commentsCount}
+                  remixesCount={remix._count.remixes}
+                  hideOriginal={true}
+                  reactionCounts={remixReactions.reactionCounts}
+                  userReaction={remixReactions.userReaction}
+                />
+              );
+            })}
           </div>
         )}
       </div>

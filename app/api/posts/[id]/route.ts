@@ -42,24 +42,34 @@ export async function POST(
     }
 
     if (action === 'react' && type) {
-      // Eliminar reacción anterior del usuario en este post (si existe)
+      const validTypes = ['like', 'fun', 'angry', 'indifferent', 'surprised', 'disgust'];
+      if (!validTypes.includes(type)) {
+        return NextResponse.json({ error: 'Tipo de reacción inválido' }, { status: 400 });
+      }
+
       const prev = await prisma.reaction.findFirst({
         where: { postId: id, userId },
       });
+
+      if (prev?.type === type) {
+        // Click en el mismo emoji → deseleccionar
+        await prisma.reaction.delete({ where: { id: prev.id } });
+        await prisma.post.update({ where: { id }, data: { likes: { decrement: 1 } } });
+        const total = await prisma.reaction.count({ where: { postId: id, type } });
+        const allTotal = await prisma.reaction.count({ where: { postId: id } });
+        return NextResponse.json({ reacted: false, type, count: total, allCount: allTotal, prevType: null });
+      }
+
       if (prev) {
         await prisma.reaction.delete({ where: { id: prev.id } });
       }
 
-      if (prev?.type === type) {
-        // Click en el mismo emoji → deseleccionar
-        const total = await prisma.reaction.count({ where: { postId: id, type } });
-        return NextResponse.json({ reacted: false, type, count: total });
-      }
-
       await prisma.reaction.create({ data: { type, postId: id, userId } });
+      await prisma.post.update({ where: { id }, data: { likes: { increment: 1 } } });
       notifyAuthor(id, userId, 'reaction', type);
       const total = await prisma.reaction.count({ where: { postId: id, type } });
-      return NextResponse.json({ reacted: true, type, count: total });
+      const allTotal = await prisma.reaction.count({ where: { postId: id } });
+      return NextResponse.json({ reacted: true, type, count: total, allCount: allTotal, prevType: prev?.type || null });
     }
 
     return NextResponse.json({ error: 'Acción no válida' }, { status: 400 });

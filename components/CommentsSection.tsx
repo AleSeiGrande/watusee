@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useT } from '@/lib/i18n/context';
 import { Send } from 'lucide-react';
 
@@ -18,6 +19,7 @@ interface CommentItem {
 
 export default function CommentsSection({ postId, initialCount }: { postId: string; initialCount: number }) {
   const t = useT();
+  const router = useRouter();
   const [comments, setComments] = useState<CommentItem[]>([]);
   const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
@@ -40,6 +42,10 @@ export default function CommentsSection({ postId, initialCount }: { postId: stri
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ content: text.trim() }),
       });
+      if (res.status === 401) {
+        router.push('/login');
+        return;
+      }
       if (res.ok) {
         const data = await res.json();
         setComments((prev) => [data.comment, ...prev]);

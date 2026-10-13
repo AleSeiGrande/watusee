@@ -129,6 +129,22 @@ The app targets **Hostinger Node.js hosting**:
 
 Set the environment variables from the table above in the hosting panel.
 
+## Admin panel
+
+Payments, donations and Print Shop links can be configured **from the web** at
+`/admin` (no `.env` edit or redeploy needed). Values are stored in the `Setting`
+table and take priority over environment variables.
+
+To grant access, mark a user as admin:
+
+```bash
+npx prisma studio                      # toggle User.isAdmin in the UI
+# or, via a script / SQL:
+# UPDATE User SET isAdmin = 1 WHERE username = 'your-username';
+```
+
+Admins see a "Panel de admin" entry in their avatar menu.
+
 ## Selling / handover
 
 This project is available for acquisition (domain + product). See [`HANDOVER.md`](./HANDOVER.md) for the

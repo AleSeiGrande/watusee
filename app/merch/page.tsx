@@ -97,5 +97,5 @@ export default async function MerchPage() {
     image: post.interpretedImage,
   }));
 
-  return <MerchClient creations={creations} products={getMerchProducts()} currency={CURRENCY} />;
+  return <MerchClient creations={creations} products={await getMerchProducts()} currency={CURRENCY} />;
 }

@@ -48,6 +48,7 @@ export default async function Navbar() {
         email: user.email,
         image: user.image,
         isAdult,
+        isAdmin: user.isAdmin,
         stats: {
           posts: user._count.posts,
           totalLikes,

@@ -21,7 +21,7 @@ const MECENAS_PERKS = [
 ];
 
 export default async function SupportPage() {
-  const mecenas = getPlans().find((plan) => plan.id === 'mecenas');
+  const mecenas = (await getPlans()).find((plan) => plan.id === 'mecenas');
   const donateUrl = mecenas?.donateUrl ?? null;
 
   const patrons = await prisma.user.findMany({

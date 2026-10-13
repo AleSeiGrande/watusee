@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { LogOut, Camera, Loader2, Image } from 'lucide-react';
+import { LogOut, Camera, Loader2, Image, Shield } from 'lucide-react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { useT } from '@/lib/i18n/context';
@@ -24,6 +24,7 @@ interface UserData {
   email: string | null;
   image: string | null;
   isAdult: boolean;
+  isAdmin?: boolean;
   stats: UserStats;
 }
 
@@ -146,6 +147,20 @@ export default function UserDropdown({ sessionUser, initialData }: { sessionUser
                     <p className="text-xs text-gray-400">Remixes</p>
                   </div>
                 </div>
+
+                {/* Admin */}
+                {user.isAdmin ? (
+                  <div className="border-t border-dark-glass-border">
+                    <Link
+                      href="/admin"
+                      className="w-full flex items-center gap-3 px-6 py-3 text-brand-accent hover:text-white hover:bg-brand-accent/5 transition-colors text-sm"
+                      onClick={() => setOpen(false)}
+                    >
+                      <Shield className="w-4 h-4" />
+                      Panel de admin
+                    </Link>
+                  </div>
+                ) : null}
 
                 {/* My Creations */}
                 <div className="border-t border-dark-glass-border">

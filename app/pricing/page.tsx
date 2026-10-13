@@ -13,7 +13,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function PricingPage() {
   const session = await auth();
-  const plans = getPlans();
+  const plans = await getPlans();
 
   return (
     <PricingClient plans={plans} isLoggedIn={Boolean(session?.user)} currency={CURRENCY} />

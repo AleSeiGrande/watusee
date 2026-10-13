@@ -27,6 +27,15 @@ la ponga a andar en minutos. Pensado para acompañar una venta de activo
 
 > Regla de oro: **nunca** entregues credenciales vivas. El comprador genera las suyas.
 
+### 3.1 Los links se cargan desde la web (panel `/admin`)
+
+No hace falta editar `.env` ni rebuild: en **`/admin`** (menú del avatar, solo
+para usuarios con `User.isAdmin = true`) el dueño pega los links de pago, de
+donación y de la Print Shop. Se guardan en la tabla `Setting` y **tienen
+prioridad** sobre las variables de entorno. Un campo vacío = se usa el `.env`.
+
+Para dar acceso de admin: `npx prisma studio` → `User` → `isAdmin = true`.
+
 ---
 
 ## 3. Cómo activar los pagos (5 minutos)
@@ -66,9 +75,9 @@ La app **no se rompe**.
 La app incluye una tienda (`/merch`) donde el miembro elige una de sus creaciones
 y la ve en una **playera, taza o póster**, con descarga en HD y botón de pedido.
 
-- Definición de productos y links: `lib/merch.ts`.
+- Definición de productos y links: `lib/merch.ts` (resueltos desde `/admin` o `.env`).
 - Bloqueo por plan: `lib/entitlements.ts` (feature `merch.print` → Frida y Da Vinci).
-- URLs de pedido (provider-agnostic) en `.env`:
+- URLs de pedido (provider-agnostic): panel `/admin`, o `.env` como fallback:
   ```
   NEXT_PUBLIC_MERCH_TSHIRT_URL=""
   NEXT_PUBLIC_MERCH_MUG_URL=""
@@ -128,7 +137,7 @@ npm start                 # o: node start.js  (entrada para Hostinger)
 - [ ] Titularidad de la marca y del dominio verificable.
 - [ ] Estado de la base de datos y backups.
 
-### 7.b Deuda técnica conocida (transparencia)
+### 8.1 Deuda técnica conocida (transparencia)
 
 - **Lint limpio**: `npm run lint` termina sin errores. Quedan ~**113 warnings**
   heredados de código antiguo (reglas `no-explicit-any`, `react-hooks/*`,

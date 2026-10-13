@@ -50,6 +50,7 @@ model User {
   planStatus   String         @default("active") // active | past_due | canceled | incomplete
   planRenewsAt DateTime?
   isPatron     Boolean        @default(false)
+  isAdmin      Boolean        @default(false)
   subscriptions Subscription[]
   payments      PaymentEvent[]
 }
@@ -487,4 +488,12 @@ model PaymentEvent {
   createdAt DateTime @default(now())
 
   @@index([userId])
+}
+
+// Configuración editable desde el panel de admin (links de pago, merch, etc.).
+// Tiene prioridad sobre las variables de entorno del mismo nombre.
+model Setting {
+  key       String   @id
+  value     String   @default("")
+  updatedAt DateTime @updatedAt
 }

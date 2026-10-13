@@ -12,6 +12,8 @@
 //   - Así podés cambiar de proveedor cuando quieras sin tocar código.
 // ----------------------------------------------------------------------------
 
+import { getSettingsMap, resolveKey, SETTING_KEYS } from './settings';
+
 export type BillingInterval = 'monthly' | 'yearly';
 
 export type PlanCtaKind = 'free' | 'checkout' | 'donate';
@@ -30,11 +32,11 @@ export interface PlanDefinition {
   ctaKind: PlanCtaKind;
   /** Claves i18n de las features incluidas. */
   featureKeys: string[];
-  /** Env var con la URL de pago mensual / anual. */
-  envMonthly?: string;
-  envYearly?: string;
-  /** Env var con el link de donación (PayPal, Buy Me a Coffee, Ko-fi...). */
-  envDonate?: string;
+  /** Clave de configuración (panel de admin / .env) con la URL de pago. */
+  settingMonthly?: string;
+  settingYearly?: string;
+  /** Clave de configuración con el link de donación (PayPal, Ko-fi...). */
+  settingDonate?: string;
 }
 
 /** Plan ya resuelto con las URLs de pago, listo para pasar al cliente. */
@@ -75,8 +77,8 @@ export const PLANS: PlanDefinition[] = [
     priceMonthly: 4.99,
     priceYearly: 39,
     ctaKind: 'checkout',
-    envMonthly: 'NEXT_PUBLIC_CHECKOUT_FRIDA_MONTHLY',
-    envYearly: 'NEXT_PUBLIC_CHECKOUT_FRIDA_YEARLY',
+    settingMonthly: SETTING_KEYS.fridaMonthly,
+    settingYearly: SETTING_KEYS.fridaYearly,
     featureKeys: [
       'pricing.frida.f1',
       'pricing.frida.f2',
@@ -92,8 +94,8 @@ export const PLANS: PlanDefinition[] = [
     priceMonthly: 9.99,
     priceYearly: 79,
     ctaKind: 'checkout',
-    envMonthly: 'NEXT_PUBLIC_CHECKOUT_DAVINCI_MONTHLY',
-    envYearly: 'NEXT_PUBLIC_CHECKOUT_DAVINCI_YEARLY',
+    settingMonthly: SETTING_KEYS.davinciMonthly,
+    settingYearly: SETTING_KEYS.davinciYearly,
     featureKeys: [
       'pricing.davinci.f1',
       'pricing.davinci.f2',
@@ -110,7 +112,7 @@ export const PLANS: PlanDefinition[] = [
     priceMonthly: null,
     priceYearly: null,
     ctaKind: 'donate',
-    envDonate: 'NEXT_PUBLIC_DONATE_URL',
+    settingDonate: SETTING_KEYS.donate,
     featureKeys: [
       'pricing.mecenas.f1',
       'pricing.mecenas.f2',
@@ -120,17 +122,13 @@ export const PLANS: PlanDefinition[] = [
   },
 ];
 
-function readEnv(key?: string): string | null {
-  if (!key) return null;
-  const value = process.env[key];
-  return value && value.trim().length > 0 ? value.trim() : null;
-}
-
 /**
- * Resuelve los planes con sus links de pago desde las variables de entorno.
+ * Resuelve los planes con sus links de pago. Prioriza la configuración guardada
+ * desde el panel de admin (/admin) y cae a las variables de entorno.
  * Se ejecuta en el servidor y el resultado (serializable) se pasa al cliente.
  */
-export function getPlans(): ResolvedPlan[] {
+export async function getPlans(): Promise<ResolvedPlan[]> {
+  const db = await getSettingsMap();
   return PLANS.map((plan) => ({
     id: plan.id,
     name: plan.name,
@@ -140,15 +138,16 @@ export function getPlans(): ResolvedPlan[] {
     ctaKind: plan.ctaKind,
     featureKeys: plan.featureKeys,
     checkout: {
-      monthly: readEnv(plan.envMonthly),
-      yearly: readEnv(plan.envYearly),
+      monthly: plan.settingMonthly ? resolveKey(plan.settingMonthly, db) : null,
+      yearly: plan.settingYearly ? resolveKey(plan.settingYearly, db) : null,
     },
-    donateUrl: readEnv(plan.envDonate),
+    donateUrl: plan.settingDonate ? resolveKey(plan.settingDonate, db) : null,
   }));
 }
 
-export function getPlanById(id: string): ResolvedPlan | undefined {
-  return getPlans().find((plan) => plan.id === id);
+export async function getPlanById(id: string): Promise<ResolvedPlan | undefined> {
+  const plans = await getPlans();
+  return plans.find((plan) => plan.id === id);
 }
 
 /** true si el plan es de pago (no free ni donación). */

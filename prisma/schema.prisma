@@ -461,7 +461,7 @@ model Subscription {
   plan                   String    // frida | davinci | mecenas
   interval               String    @default("monthly") // monthly | yearly
   status                 String    @default("active")  // active | past_due | canceled | incomplete
-  provider               String    // stripe | paddle | lemonsqueezy | manual
+  provider               String    // stripe | paddle | lemonsqueezy | generic | manual
   providerSubscriptionId String?   @unique
   providerCustomerId     String?
   amount                 Int?      // en centavos

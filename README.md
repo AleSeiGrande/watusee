@@ -94,6 +94,8 @@ All variables live in `.env` (never committed). `.env.example` documents each on
 | `NEXT_PUBLIC_DONATE_URL` | Mecenas donation URL (PayPal.me, Ko-fi, Buy Me a Coffee, …) |
 | `NEXT_PUBLIC_MERCH_TSHIRT_URL` / `_MUG_URL` / `_POSTER_URL` | Per-product Print Shop order links (Printful, Gelato, Printify, …) |
 | `NEXT_PUBLIC_MERCH_PARTNER_URL` | Fallback Print Shop order link used when a product link is empty |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret (auto-activates a plan after payment) |
+| `GENERIC_WEBHOOK_SECRET` | Shared secret for `POST /api/webhooks/generic` (any provider, or Zapier/Make) |
 
 > If a checkout/donation URL is empty, the pricing page shows "coming soon" and routes to the contact form.
 
@@ -144,6 +146,32 @@ npx prisma studio                      # toggle User.isAdmin in the UI
 ```
 
 Admins see a "Panel de admin" entry in their avatar menu.
+
+### Activating plans
+
+There are two ways to turn a payment into an active plan:
+
+1. **Automatic (webhooks).** Point your provider at a webhook endpoint; the plan
+   turns on as soon as the payment succeeds. Checkout links get a
+   `client_reference_id` (user + plan + interval) appended automatically so the
+   webhook knows who paid.
+   - **Stripe:** `POST /api/webhooks/stripe`, verified with `STRIPE_WEBHOOK_SECRET`.
+     Handled events: `checkout.session.completed`, `customer.subscription.updated`,
+     `customer.subscription.deleted`.
+   - **Any other provider** (or Zapier / Make): `POST /api/webhooks/generic` with the
+     header `x-webhook-secret`. Body:
+     ```json
+     { "plan": "frida", "interval": "monthly", "userId": "<id>" }
+     ```
+     Use `"email"` instead of `"userId"` to match by email. To cancel, send
+     `{ "action": "cancel", "providerSubscriptionId": "sub_123" }`.
+2. **Manual.** In `/admin`, use the *"Activar plan manualmente"* card: type a
+   username, pick a plan, then activate or revoke. Useful for tests, comps, or
+   before webhooks are wired up.
+
+Both paths are idempotent by event id and update the user (`plan`, `planStatus`,
+`planRenewsAt`, `isPatron`) plus the `Subscription` and `PaymentEvent` tables.
+Webhook secrets live in `.env` (server secrets) rather than the `Setting` table.
 
 ## Selling / handover
 

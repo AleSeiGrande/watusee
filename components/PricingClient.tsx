@@ -13,26 +13,49 @@ import {
   Gem,
 } from 'lucide-react';
 import { useT } from '@/lib/i18n/context';
+import { encodeCheckoutRef } from '@/lib/billing-shared';
 import type { BillingInterval, ResolvedPlan } from '@/lib/plans';
 
 interface PricingClientProps {
   plans: ResolvedPlan[];
   isLoggedIn: boolean;
   currency: string;
+  /** Identidad que se adjunta al checkout para que el webhook active el plan. */
+  userId?: string | null;
+  userEmail?: string | null;
 }
 
 function formatPrice(currency: string, value: number): string {
   return `${currency}${Number.isInteger(value) ? value : value.toFixed(2)}`;
 }
 
-export default function PricingClient({ plans, isLoggedIn, currency }: PricingClientProps) {
+export default function PricingClient({ plans, isLoggedIn, currency, userId, userEmail }: PricingClientProps) {
   const t = useT();
   const [interval, setInterval] = useState<BillingInterval>('monthly');
+
+  /**
+   * Adjunta la identidad del usuario y el plan al link de checkout
+   * (`client_reference_id`, que Stripe interpreta nativamente) para que el
+   * webhook sepa a quién activarle el plan. Los proveedores que no lo entienden
+   * simplemente ignoran el parámetro.
+   */
+  const withIdentity = (url: string, plan: ResolvedPlan): string => {
+    if (!userId) return url;
+    try {
+      const target = new URL(url);
+      target.searchParams.set('client_reference_id', encodeCheckoutRef(userId, plan.id, interval));
+      if (userEmail) target.searchParams.set('prefilled_email', userEmail);
+      return target.toString();
+    } catch {
+      return url;
+    }
+  };
 
   const hrefFor = (plan: ResolvedPlan): string => {
     if (plan.ctaKind === 'free') return isLoggedIn ? '/create' : '/register';
     if (plan.ctaKind === 'donate') return '/support';
-    return plan.checkout[interval] ?? '/contact';
+    const link = plan.checkout[interval];
+    return link ? withIdentity(link, plan) : '/contact';
   };
 
   const isExternal = (href: string) => /^https?:\/\//.test(href);

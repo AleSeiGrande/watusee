@@ -36,6 +36,10 @@ prioridad** sobre las variables de entorno. Un campo vacío = se usa el `.env`.
 
 Para dar acceso de admin: `npx prisma studio` → `User` → `isAdmin = true`.
 
+Además de los links, el panel incluye la tarjeta **"Activar plan manualmente"**:
+escribís el nombre de usuario, elegís el plan y activás o revocás con un clic.
+Sirve para pruebas, cortesías o mientras no estén conectados los webhooks.
+
 ---
 
 ## 3. Cómo activar los pagos (5 minutos)
@@ -60,6 +64,30 @@ La app usa **links de checkout hospedados**. No requiere backend de pagos.
 
 Si una URL queda vacía, el botón muestra "próximamente" y lleva a contacto.
 La app **no se rompe**.
+
+### 3.2 Activación automática del plan (webhooks)
+
+Los links cobran igual por sí solos, pero para que el plan **se active solo** al
+pagar hay que conectar un webhook. La web agrega automáticamente
+`client_reference_id` (`<userId>:<plan>:<interval>`) a cada link de checkout, para
+que el webhook sepa a quién activarle el plan.
+
+- **Stripe** (recomendado): en el dashboard, *Developers → Webhooks*, endpoint
+  `POST https://TU-DOMINIO/api/webhooks/stripe`, y guardar el *signing secret* en
+  `STRIPE_WEBHOOK_SECRET`. Eventos: `checkout.session.completed`,
+  `customer.subscription.updated`, `customer.subscription.deleted`.
+- **Cualquier otro proveedor** (o Zapier / Make): `POST /api/webhooks/generic`
+  con la cabecera `x-webhook-secret` igual a `GENERIC_WEBHOOK_SECRET`. Body:
+  `{ "plan": "frida", "interval": "monthly", "userId": "<id>" }` (o `"email"`).
+  Para cancelar: `{ "action": "cancel", "providerSubscriptionId": "sub_123" }`.
+
+Cada evento se registra en `PaymentEvent` (idempotente por `eventId`) y actualiza
+`User` (`plan`, `planStatus`, `planRenewsAt`, `isPatron`) + `Subscription`.
+Los secretos de webhook viven en `.env` (no en la tabla `Setting`).
+
+> Para poder vincular el pago a una cuenta, conviene que el usuario esté
+> **logueado** al elegir el plan (así el link lleva su `userId`). Si no, se
+> intenta resolver por el email de la cuenta.
 
 ## 4. Personalización (sin tocar la UI)
 
@@ -146,3 +174,8 @@ npm start                 # o: node start.js  (entrada para Hostinger)
 - `npx tsc --noEmit` limpio y `next build` sin errores.
 - Base de datos **SQLite**: simple y suficiente hoy. Para escalar (o si hay
   múltiples usuarios concurrentes) conviene migrar a **PostgreSQL**.
+- **Pagos**: checkout + activación por webhooks ya implementados; falta cargar
+  **URLs reales** (panel `/admin`) y el **signing secret** del proveedor. Sin
+  webhooks, se pueden activar planes a mano en `/admin`.
+- **Premium gating**: hoy se aplica en las páginas `/merch` y `/nft`. Conviene
+  extenderlo a las features de `lib/entitlements.ts` a medida que se usen.

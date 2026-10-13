@@ -16,6 +16,12 @@ export default async function PricingPage() {
   const plans = await getPlans();
 
   return (
-    <PricingClient plans={plans} isLoggedIn={Boolean(session?.user)} currency={CURRENCY} />
+    <PricingClient
+      plans={plans}
+      isLoggedIn={Boolean(session?.user)}
+      currency={CURRENCY}
+      userId={session?.user?.id ?? null}
+      userEmail={session?.user?.email ?? null}
+    />
   );
 }

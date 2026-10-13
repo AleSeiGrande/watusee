@@ -6,6 +6,7 @@ import { auth } from '@/auth';
 import { isAdmin } from '@/lib/admin';
 import { getAdminSettings } from '@/lib/settings';
 import AdminSettingsClient from '@/components/AdminSettingsClient';
+import AdminGrantPlan from '@/components/AdminGrantPlan';
 
 export const metadata: Metadata = {
   title: 'Admin | WatUSee',
@@ -45,5 +46,9 @@ export default async function AdminPage() {
   }
 
   const fields = await getAdminSettings();
-  return <AdminSettingsClient fields={fields} />;
+  return (
+    <AdminSettingsClient fields={fields}>
+      <AdminGrantPlan />
+    </AdminSettingsClient>
+  );
 }

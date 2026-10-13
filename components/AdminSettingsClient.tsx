@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -48,7 +48,13 @@ const SOURCE_BADGE: Record<AdminSettingField['source'], { label: string; classNa
   none: { label: 'Sin definir', className: 'bg-white/5 text-gray-400 border-white/10' },
 };
 
-export default function AdminSettingsClient({ fields }: { fields: AdminSettingField[] }) {
+export default function AdminSettingsClient({
+  fields,
+  children,
+}: {
+  fields: AdminSettingField[];
+  children?: ReactNode;
+}) {
   const router = useRouter();
   const [rows, setRows] = useState<AdminSettingField[]>(fields);
   const [values, setValues] = useState<Record<string, string>>(
@@ -200,6 +206,8 @@ export default function AdminSettingsClient({ fields }: { fields: AdminSettingFi
             );
           })}
         </div>
+
+        {children}
       </div>
 
       {/* Barra de guardado */}

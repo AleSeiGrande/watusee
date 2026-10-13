@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
 import { auth } from "@/auth";
 
@@ -43,6 +44,7 @@ export default async function RootLayout({
           <main className="flex-1 flex flex-col w-full">
             {children}
           </main>
+          <Footer />
         </Providers>
       </body>
     </html>

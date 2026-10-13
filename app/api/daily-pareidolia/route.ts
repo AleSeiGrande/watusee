@@ -111,7 +111,7 @@ export async function POST(req: Request) {
 
     const todayStart = getTodayStart();
 
-    let challenge = await prisma.dailyPareidolia.findUnique({
+    const challenge = await prisma.dailyPareidolia.findUnique({
       where: { date: todayStart },
     });
 

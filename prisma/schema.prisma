@@ -44,6 +44,14 @@ model User {
   mindReaderReactions    MindReaderReaction[]
   puzzleGames           PuzzleGame[]
   puzzleSessions        PuzzleSession[]
+
+  // Membresías / planes
+  plan         String         @default("free")   // banksy | frida | davinci | mecenas
+  planStatus   String         @default("active") // active | past_due | canceled | incomplete
+  planRenewsAt DateTime?
+  isPatron     Boolean        @default(false)
+  subscriptions Subscription[]
+  payments      PaymentEvent[]
 }
 
 model Post {
@@ -442,4 +450,41 @@ model DailyPuzzle {
   gameId    String      @unique
   game      PuzzleGame  @relation(fields: [gameId], references: [id])
   createdAt DateTime    @default(now())
+}
+
+// Suscripción activa o histórica de un usuario a un plan de pago.
+model Subscription {
+  id                     String    @id @default(cuid())
+  userId                 String
+  user                   User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan                   String    // frida | davinci | mecenas
+  interval               String    @default("monthly") // monthly | yearly
+  status                 String    @default("active")  // active | past_due | canceled | incomplete
+  provider               String    // stripe | paddle | lemonsqueezy | manual
+  providerSubscriptionId String?   @unique
+  providerCustomerId     String?
+  amount                 Int?      // en centavos
+  currency               String?
+  currentPeriodEnd       DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  @@index([userId])
+}
+
+// Registro de eventos del proveedor de pagos (webhooks) para idempotencia y auditoría.
+model PaymentEvent {
+  id        String   @id @default(cuid())
+  provider  String
+  eventId   String   @unique
+  type      String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  plan      String?
+  amount    Int?
+  currency  String?
+  raw       String   @default("")
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }

@@ -167,7 +167,7 @@ export default function PlayMindReaderPage() {
                   <span className="text-xs font-semibold text-gray-500">{t('mindreader.round')} {i + 1}</span>
                   {ans.correct ? <Check className="w-4 h-4 text-green-400" /> : <X className="w-4 h-4 text-red-400" />}
                 </div>
-                <p className="text-sm text-gray-300 mb-2 italic">"{round.clue}"</p>
+                <p className="text-sm text-gray-300 mb-2 italic">&quot;{round.clue}&quot;</p>
                 <div className="grid grid-cols-3 gap-1 mb-2">
                   {[round.image0, round.image1, round.image2].map((img, j) => (
                     <div key={j} className={`aspect-square rounded-lg overflow-hidden border-2 bg-zinc-900 ${j === round.correctIndex ? 'border-green-500' : j === ans.chosenIndex && !ans.correct ? 'border-red-500' : 'border-transparent'}`}>
@@ -211,7 +211,7 @@ export default function PlayMindReaderPage() {
       {/* Clue */}
       <div className="glass-panel rounded-2xl p-5 border border-dark-glass-border/50 mb-6 text-center">
         <Brain className="w-6 h-6 text-purple-400 mx-auto mb-3" />
-        <p className="text-white text-lg font-medium italic">"{round.clue}"</p>
+        <p className="text-white text-lg font-medium italic">&quot;{round.clue}&quot;</p>
         <p className="text-xs text-gray-600 mt-2">{t('mindreader.pickImage')}</p>
       </div>
 

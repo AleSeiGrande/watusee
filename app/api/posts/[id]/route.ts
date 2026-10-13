@@ -51,7 +51,7 @@ export async function POST(
         where: { postId: id, userId },
       });
 
-      if (prev?.type === type) {
+      if (prev && prev.type === type) {
         // Click en el mismo emoji → deseleccionar
         await prisma.reaction.delete({ where: { id: prev.id } });
         await prisma.post.update({ where: { id }, data: { likes: { decrement: 1 } } });

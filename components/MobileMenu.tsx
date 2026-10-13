@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Menu, X, Sparkles, PlusCircle, Image } from 'lucide-react';
+import { Menu, X, Sparkles, PlusCircle, Image, CreditCard, Heart, Shirt, Gem } from 'lucide-react';
 import { useT } from '@/lib/i18n/context';
 
 interface MobileMenuProps {
@@ -42,6 +42,38 @@ export default function MobileMenu({ session }: MobileMenuProps) {
             >
               <Sparkles className="h-5 w-5 text-brand-accent" />
               <span className="font-medium">{t('nav.imaginarium')}</span>
+            </Link>
+            <Link
+              href="/pricing"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+            >
+              <CreditCard className="h-5 w-5 text-brand-primary" />
+              <span className="font-medium">{t('pricing.nav')}</span>
+            </Link>
+            <Link
+              href="/support"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+            >
+              <Heart className="h-5 w-5 text-brand-secondary" />
+              <span className="font-medium">{t('support.nav')}</span>
+            </Link>
+            <Link
+              href="/merch"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+            >
+              <Shirt className="h-5 w-5 text-brand-primary" />
+              <span className="font-medium">{t('merch.nav')}</span>
+            </Link>
+            <Link
+              href="/nft"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
+            >
+              <Gem className="h-5 w-5 text-brand-accent" />
+              <span className="font-medium">{t('nft.nav')}</span>
             </Link>
             <Link
               href="/create"

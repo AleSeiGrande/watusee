@@ -5,7 +5,7 @@ export async function GET() {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  let dp = await prisma.dailyPuzzle.findFirst({
+  const dp = await prisma.dailyPuzzle.findFirst({
     where: { date: today },
     include: {
       game: { include: { creator: { select: { id: true, username: true, image: true } } } },

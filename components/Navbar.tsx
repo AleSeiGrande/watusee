@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { PlusCircle, Sparkles } from 'lucide-react';
+import { PlusCircle, Sparkles, CreditCard, Heart, Shirt } from 'lucide-react';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
@@ -83,6 +83,14 @@ export default async function Navbar() {
             <Sparkles className="h-4 w-4" />
             <span><T id="nav.imaginarium" /></span>
           </Link>
+          <Link href="/pricing" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-300 hover:text-brand-accent transition-colors rounded-lg hover-lift">
+            <CreditCard className="h-4 w-4" />
+            <span><T id="pricing.nav" /></span>
+          </Link>
+          <Link href="/merch" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-300 hover:text-brand-accent transition-colors rounded-lg hover-lift">
+            <Shirt className="h-4 w-4" />
+            <span><T id="merch.nav" /></span>
+          </Link>
           {userData?.isAdult && (
             <Link href="/adults" className="flex items-center gap-1.5 px-3 py-2 text-sm text-red-400 hover:text-red-300 transition-colors rounded-lg hover-lift">
               <span><T id="nav.adults" /></span>
@@ -90,6 +98,10 @@ export default async function Navbar() {
           )}
           <Link href="/about" className="flex items-center gap-1.5 px-3 py-2 text-sm text-gray-300 hover:text-brand-accent transition-colors rounded-lg hover-lift">
             <span><T id="about.nav" /></span>
+          </Link>
+          <Link href="/support" className="hidden lg:flex items-center gap-1.5 px-3 py-2 text-sm text-brand-secondary hover:text-brand-secondary/80 transition-colors rounded-lg hover-lift">
+            <Heart className="h-4 w-4" />
+            <span><T id="support.nav" /></span>
           </Link>
         </div>
 

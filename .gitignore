@@ -49,6 +49,10 @@ dev.db
 # zips / backups
 *.zip
 whatUseeChatgtp/
+
+# sale kit (private: valuation & negotiation — never hand this to the buyer)
+/sale/
+
 # start.js is the entry point for Hostinger
 
 # logs

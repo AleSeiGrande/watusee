@@ -38,8 +38,8 @@ Live product: **https://watusee.fun**
 | Plan | Role | Price | Highlights |
 | --- | --- | --- | --- |
 | **Banksy** | Free | $0 | Create, share, play |
-| **Frida** | Creator | $4.99/mo · $39/yr | Echo Pro tools, Print Shop, no ads |
-| **Da Vinci** | Studio | $9.99/mo · $79/yr | Everything in Frida + Dual Puzzle, advanced stats, early access, NFT Gallery |
+| **Frida** | Creator | $2.99/mo · $29/yr | Echo Pro tools, Print Shop, no ads |
+| **Da Vinci** | Studio | $4.99/mo · $49/yr | Everything in Frida + Dual Puzzle, advanced stats, early access, NFT Gallery |
 | **Mecenas** | Donation | Name your price | Support the project, patron badge, thanks page |
 
 Payments use **provider-agnostic hosted checkout links** (Stripe Payment Links, Paddle, Lemon Squeezy, …) driven by

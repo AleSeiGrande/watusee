@@ -36,8 +36,7 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Legacy backup / generated folders (not part of the app source):
-    "whatUseeChatgtp/**",
+    // Generated folders (not part of the app source):
     "app/generated/**",
   ]),
   // Plain Node entry points and maintenance scripts are CommonJS on purpose.

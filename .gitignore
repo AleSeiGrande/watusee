@@ -48,7 +48,6 @@ dev.db
 
 # zips / backups
 *.zip
-whatUseeChatgtp/
 
 # sale kit (private: valuation & negotiation — never hand this to the buyer)
 /sale/

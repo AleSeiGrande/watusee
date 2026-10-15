@@ -426,6 +426,9 @@ export const es: Record<string, string> = {
   'footer.account': 'Cuenta',
   'footer.support': 'Apoyá el proyecto',
   'footer.rights': '© {year} WatUSee. Todos los derechos reservados.',
+  'footer.terms': 'Términos',
+  'footer.privacy': 'Privacidad',
+  'footer.refund': 'Reembolsos',
 
   // Support / Mecenas
   'support.nav': 'Apoyar',

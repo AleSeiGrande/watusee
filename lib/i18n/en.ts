@@ -426,6 +426,9 @@ export const en = {
   'footer.account': 'Account',
   'footer.support': 'Support the project',
   'footer.rights': '© {year} WatUSee. All rights reserved.',
+  'footer.terms': 'Terms',
+  'footer.privacy': 'Privacy',
+  'footer.refund': 'Refunds',
 
   // Support / Mecenas
   'support.nav': 'Support',

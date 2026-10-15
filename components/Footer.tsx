@@ -92,11 +92,22 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-dark-glass-border flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-500">
-          <span>
+        <div className="mt-10 pt-6 border-t border-dark-glass-border flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+          <span className="order-2 sm:order-1">
             <T id="footer.rights" params={{ year: String(year) }} />
           </span>
-          <span className="inline-flex items-center gap-1.5">
+          <nav className="order-1 sm:order-2 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+            <Link href="/terms" className="hover:text-gray-300 transition-colors">
+              <T id="footer.terms" />
+            </Link>
+            <Link href="/privacy" className="hover:text-gray-300 transition-colors">
+              <T id="footer.privacy" />
+            </Link>
+            <Link href="/refund" className="hover:text-gray-300 transition-colors">
+              <T id="footer.refund" />
+            </Link>
+          </nav>
+          <span className="order-3 inline-flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-brand-accent" />
             watusee.fun
           </span>

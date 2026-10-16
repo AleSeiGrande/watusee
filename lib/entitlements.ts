@@ -7,6 +7,7 @@ import { prisma } from '@/lib/prisma';
 export type Feature =
   | 'puzzle.dual'
   | 'download.hd'
+  | 'story.more_images'
   | 'echo.pro'
   | 'analytics.advanced'
   | 'ads.free'
@@ -19,8 +20,8 @@ export type Feature =
  */
 const PLAN_FEATURES: Record<string, Feature[]> = {
   banksy: [],
-  frida: ['download.hd', 'merch.print'],
-  davinci: ['download.hd', 'echo.pro', 'puzzle.dual', 'analytics.advanced', 'ads.free', 'merch.print', 'nft.prestige'],
+  frida: ['download.hd', 'story.more_images', 'merch.print'],
+  davinci: ['download.hd', 'story.more_images', 'echo.pro', 'puzzle.dual', 'analytics.advanced', 'ads.free', 'merch.print', 'nft.prestige'],
   mecenas: [],
 };
 

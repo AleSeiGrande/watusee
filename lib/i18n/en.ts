@@ -387,7 +387,7 @@ export const en = {
   'pricing.frida.tagline': 'For creators who share something new every day.',
   'pricing.frida.f1': 'Everything in Banksy, plus:',
   'pricing.frida.f2': 'HD downloads without watermark',
-  'pricing.frida.f3': 'Unlimited stories and more images per story',
+  'pricing.frida.f3': 'Up to 6 images per story (free plan: 4)',
   'pricing.frida.f4': 'Exclusive reactions and stickers',
   'pricing.frida.f5': 'Creator badge on your profile',
   'pricing.frida.f6': 'Print Shop: turn your creations into a t-shirt, mug or poster',
@@ -528,6 +528,13 @@ export const en = {
   'nft.login.desc': 'Create an account or log in to preview your creations as NFTs.',
   'nft.login.cta': 'Log in',
   'nft.cta': 'Browse my creations',
+
+  // Downloads & stories
+  'post.download': 'Download',
+  'post.download.hd': 'Download HD',
+  'post.download.upgrade': 'Free download has a watermark — unlock clean HD',
+  'post.download.error': 'Download failed. Try again.',
+  'story.moreImages': 'Frida unlocks up to 6 images per story',
 
   // Metadata
   'meta.title': 'WatUSee | See the Unseen',

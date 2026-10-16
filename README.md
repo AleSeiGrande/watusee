@@ -31,6 +31,7 @@ Live product: **https://watusee.fun**
 - 6 languages: English, Spanish, Italian, Korean, Russian, Chinese.
 - Subscription/pricing page with artist-named plans, plus a donation option ("Mecenas").
 - **Print Shop** — turn a creation into a t-shirt, mug or poster.
+- **HD downloads** — free downloads carry a watermark; paid plans get the clean, full-resolution file.
 - **NFT Gallery** (preview / under construction) — creations as collectibles with a "prestige" score.
 - Technical SEO out of the box: `sitemap.xml`, `robots.txt` and Open Graph/Twitter cards.
 - Pluggable analytics (GA4 / Plausible / Umami) and first-touch **UTM attribution** per signup.
@@ -40,8 +41,8 @@ Live product: **https://watusee.fun**
 | Plan | Role | Price | Highlights |
 | --- | --- | --- | --- |
 | **Banksy** | Free | $0 | Create, share, play |
-| **Frida** | Creator | $2.99/mo · $29/yr | Echo Pro tools, Print Shop, no ads |
-| **Da Vinci** | Studio | $4.99/mo · $49/yr | Everything in Frida + Dual Puzzle, advanced stats, early access, NFT Gallery |
+| **Frida** | Creator | $2.99/mo · $29/yr | HD downloads without watermark, 6 images per story, Print Shop |
+| **Da Vinci** | Studio | $4.99/mo · $49/yr | Everything in Frida + Echo Pro tools, Dual Puzzle, advanced stats, early access, NFT Gallery |
 | **Mecenas** | Donation | Name your price | Support the project, patron badge, thanks page |
 
 Payments use **provider-agnostic hosted checkout links** (Stripe Payment Links, Paddle, Lemon Squeezy, …) driven by

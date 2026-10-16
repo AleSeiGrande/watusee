@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Sparkles, Send, ArrowLeft, BookOpen, TrendingUp, Zap } from 'lucide-react';
 import StoryCard from '@/components/StoryCard';
+import T from '@/components/T';
 import type { StoryWithRelations } from './types';
 
 interface ChallengeImage {
@@ -45,6 +47,7 @@ export default function StoryClient({ session, initialStories }: Props) {
   const [publishing, setPublishing] = useState(false);
   const [sort, setSort] = useState('latest');
   const [stories, setStories] = useState<StoryWithRelations[]>(initialStories);
+  const [planMax, setPlanMax] = useState(4);
 
   const wordCount = story.trim() ? story.trim().split(/\s+/).length : 0;
   const maxWords = 500;
@@ -56,6 +59,7 @@ export default function StoryClient({ session, initialStories }: Props) {
       if (res.ok) {
         const data = await res.json();
         setImages(data.images);
+        setPlanMax(typeof data.max === 'number' ? data.max : 4);
         setPhase('writing');
       }
     } catch {}
@@ -119,19 +123,25 @@ export default function StoryClient({ session, initialStories }: Props) {
           <span>Back</span>
         </button>
 
-        {/* 4 Images */}
-        <div className="grid grid-cols-2 gap-2 mb-8">
+        {/* Images */}
+        <div className="grid grid-cols-2 gap-2 mb-4">
           {images.map((img, i) => (
             <div key={img.id} className="relative aspect-square rounded-xl overflow-hidden bg-zinc-900 border border-dark-glass-border/50">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={img.imageUrl} alt={img.title} className="w-full h-full object-cover" />
-              {i === 0 && <div className="absolute top-2 left-2 bg-brand-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full">1</div>}
-              {i === 1 && <div className="absolute top-2 left-2 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">2</div>}
-              {i === 2 && <div className="absolute top-2 left-2 bg-purple-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">3</div>}
-              {i === 3 && <div className="absolute top-2 left-2 bg-rose-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">4</div>}
+              <div className="absolute top-2 left-2 bg-brand-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                {i + 1}
+              </div>
             </div>
           ))}
         </div>
+
+        {planMax <= 4 && (
+          <Link href="/pricing" className="inline-flex items-center gap-1.5 text-sm text-brand-accent hover:underline mb-8">
+            <Sparkles className="w-4 h-4" />
+            <T id="story.moreImages" />
+          </Link>
+        )}
 
         {/* Mood selector */}
         <div className="flex flex-wrap gap-2 mb-6">
@@ -161,7 +171,7 @@ export default function StoryClient({ session, initialStories }: Props) {
           <textarea
             value={story}
             onChange={(e) => setStory(e.target.value)}
-            placeholder="Write a story that connects these 4 images... Be creative, emotional, mysterious, or absurd."
+            placeholder={`Write a story that connects ${images.length || 4} images... Be creative, emotional, mysterious, or absurd.`}
             maxLength={4000}
             rows={8}
             className="w-full bg-zinc-800/80 border border-dark-glass-border rounded-xl px-5 py-4 text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-brand-primary/50 resize-none text-base leading-relaxed"

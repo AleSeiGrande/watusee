@@ -152,6 +152,24 @@ La ruta `/nft` muestra las creaciones del miembro como **coleccionables** con
 > Para lanzar campañas, usá links con UTM, por ejemplo:
 > `https://watusee.fun/?utm_source=tiktok&utm_medium=social&utm_campaign=lanzamiento`
 
+### 4.4 Descargas HD y más imágenes por historia (Frida / Da Vinci)
+
+Dos features de los planes de pago que **ya funcionan** (antes eran solo copy de precios):
+
+- **Descarga (`/api/download/[id]`)**: ruta `app/api/download/[id]/route.ts` (requiere
+  sesión; el botón está en `/post/[id]` vía `components/DownloadButton.tsx`).
+  - Plan gratis: PNG a **máx. 1080px** con **marca de agua** `watusee.fun`
+    (procesado con `sharp`; responde `X-Watusee-Watermarked: 1`).
+  - Frida / Da Vinci (feature `download.hd`): archivo **original a resolución completa,
+    sin marca de agua** (`X-Watusee-Watermarked: 0`).
+  - Acepta `?v=original|interpreted` (por defecto `interpreted`).
+- **Más imágenes por historia**: la feature `story.more_images` permite **hasta 6**
+  imágenes por historia (plan gratis: 4). Se aplica en
+  `app/api/stories/challenge/route.ts` (cuántas devuelve) y `app/api/stories/route.ts`
+  (validación 4..máx). La UI está en `app/story/StoryClient.tsx`.
+- "Historias ilimitadas" ya era cierto para todos los planes, así que el copy de Frida
+  se corrigió a lo que realmente distingue al plan (6 imágenes vs. 4).
+
 ## 5. Puesta en marcha (comprador)
 
 ```
@@ -201,5 +219,6 @@ npm start                 # o: node start.js  (entrada para Hostinger)
 - **Pagos**: checkout + activación por webhooks ya implementados; falta cargar
   **URLs reales** (panel `/admin`) y el **signing secret** del proveedor. Sin
   webhooks, se pueden activar planes a mano en `/admin`.
-- **Premium gating**: hoy se aplica en las páginas `/merch` y `/nft`. Conviene
-  extenderlo a las features de `lib/entitlements.ts` a medida que se usen.
+- **Premium gating**: ya se aplica en `/merch`, `/nft`, la descarga HD
+  (`/api/download/[id]`) y el nº de imágenes por historia. Conviene extenderlo al
+  resto de las features de `lib/entitlements.ts` a medida que se usen.

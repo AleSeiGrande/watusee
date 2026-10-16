@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
+import { getEntitlements } from '@/lib/entitlements';
 
 // GET /api/stories — list stories with filters
 export async function GET(req: Request) {
@@ -38,8 +39,14 @@ export async function POST(req: Request) {
 
   const { title, content, imageIds, mood, tags, dailyChallengeId } = await req.json();
 
-  if (!title || !content || !imageIds || !Array.isArray(imageIds) || imageIds.length !== 4) {
-    return NextResponse.json({ error: 'Se requieren title, content y 4 imageIds' }, { status: 400 });
+  const entitlements = await getEntitlements(session.user.id);
+  const maxImages = entitlements.features.includes('story.more_images') ? 6 : 4;
+
+  if (!title || !content || !Array.isArray(imageIds) || imageIds.length < 4 || imageIds.length > maxImages) {
+    return NextResponse.json(
+      { error: `Se requieren title, content y entre 4 y ${maxImages} imageIds` },
+      { status: 400 },
+    );
   }
 
   // Obtener URLs de las imágenes del Imaginarium
@@ -48,7 +55,7 @@ export async function POST(req: Request) {
     select: { id: true, imageUrl: true },
   });
 
-  if (playImages.length !== 4) {
+  if (playImages.length !== imageIds.length) {
     return NextResponse.json({ error: 'Alguna imagen no encontrada' }, { status: 400 });
   }
 

@@ -6,6 +6,8 @@ import { PenTool, ArrowLeft, ArrowRight } from "lucide-react";
 import PostCard from "@/components/PostCard";
 import T from '@/components/T';
 import CommentsSection from "@/components/CommentsSection";
+import DownloadButton from "@/components/DownloadButton";
+import { getEntitlements } from "@/lib/entitlements";
 import { auth } from "@/auth";
 
 export const dynamic = 'force-dynamic';
@@ -58,6 +60,10 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
 
   const postReactions = processReactions(post.reactions);
   const totalLikes = Object.values(postReactions.reactionCounts).reduce((a, b) => a + b, 0);
+
+  const canDownloadHd = userId
+    ? (await getEntitlements(userId)).features.includes('download.hd')
+    : false;
 
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -120,6 +126,8 @@ export default async function PostPage({ params }: { params: Promise<{ id: strin
                 <PenTool className="w-7 h-7" />
               </Link>
             </div>
+
+            {userId && <DownloadButton postId={post.id} hd={canDownloadHd} />}
           </div>
         </div>
       </div>

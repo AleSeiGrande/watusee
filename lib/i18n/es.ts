@@ -387,7 +387,7 @@ export const es: Record<string, string> = {
   'pricing.frida.tagline': 'Para creadores que comparten algo nuevo cada día.',
   'pricing.frida.f1': 'Todo lo de Banksy, y además:',
   'pricing.frida.f2': 'Descargas en HD sin marca de agua',
-  'pricing.frida.f3': 'Historias ilimitadas y más imágenes por historia',
+  'pricing.frida.f3': 'Hasta 6 imágenes por historia (plan gratis: 4)',
   'pricing.frida.f4': 'Reacciones y stickers exclusivos',
   'pricing.frida.f5': 'Insignia de creador en tu perfil',
   'pricing.frida.f6': 'Tienda: convertí tus creaciones en una playera, taza o póster',
@@ -528,6 +528,13 @@ export const es: Record<string, string> = {
   'nft.login.desc': 'Creá una cuenta o iniciá sesión para ver tus creaciones como NFT.',
   'nft.login.cta': 'Iniciar sesión',
   'nft.cta': 'Ver mis creaciones',
+
+  // Descargas e historias
+  'post.download': 'Descargar',
+  'post.download.hd': 'Descargar en HD',
+  'post.download.upgrade': 'La descarga gratis lleva marca de agua — desbloqueá el HD limpio',
+  'post.download.error': 'No se pudo descargar. Probá de nuevo.',
+  'story.moreImages': 'Frida desbloquea hasta 6 imágenes por historia',
 
   // Metadata
   'meta.title': 'WatUSee | Ve lo Invisible',

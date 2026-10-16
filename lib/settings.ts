@@ -12,7 +12,7 @@
 
 import { prisma } from '@/lib/prisma';
 
-export type SettingGroup = 'checkout' | 'donate' | 'merch';
+export type SettingGroup = 'checkout' | 'donate' | 'merch' | 'analytics';
 
 export interface SettingDef {
   /** Clave estable que se guarda en la base de datos. */
@@ -24,6 +24,8 @@ export interface SettingDef {
   label: string;
   /** Ayuda corta bajo el campo. */
   hint?: string;
+  /** Tipo de input en el panel. Por defecto `url`. */
+  inputType?: 'url' | 'text';
 }
 
 export const SETTING_DEFS: SettingDef[] = [
@@ -84,6 +86,36 @@ export const SETTING_DEFS: SettingDef[] = [
     label: 'Print Shop — link genérico (fallback)',
     hint: 'Se usa cuando un producto no tiene link propio.',
   },
+  {
+    key: 'analytics.ga4',
+    envKey: 'NEXT_PUBLIC_GA4_ID',
+    group: 'analytics',
+    label: 'Google Analytics 4 — Measurement ID',
+    hint: 'Formato G-XXXXXXXXXX. Si lo completás, se inyecta gtag automáticamente.',
+    inputType: 'text',
+  },
+  {
+    key: 'analytics.plausible',
+    envKey: 'NEXT_PUBLIC_PLAUSIBLE_DOMAIN',
+    group: 'analytics',
+    label: 'Plausible — dominio',
+    hint: 'Ej: watusee.fun. Usa el script de plausible.io.',
+    inputType: 'text',
+  },
+  {
+    key: 'analytics.umami.src',
+    envKey: 'NEXT_PUBLIC_UMAMI_SRC',
+    group: 'analytics',
+    label: 'Umami — URL del script',
+    hint: 'Ej: https://analytics.tudominio.com/script.js',
+  },
+  {
+    key: 'analytics.umami.id',
+    envKey: 'NEXT_PUBLIC_UMAMI_WEBSITE_ID',
+    group: 'analytics',
+    label: 'Umami — Website ID',
+    inputType: 'text',
+  },
 ];
 
 const DEFS_BY_KEY = new Map(SETTING_DEFS.map((d) => [d.key, d]));
@@ -98,6 +130,10 @@ export const SETTING_KEYS = {
   merchMug: 'merch.mug.url',
   merchPoster: 'merch.poster.url',
   merchPartner: 'merch.partner.url',
+  analyticsGa4: 'analytics.ga4',
+  analyticsPlausible: 'analytics.plausible',
+  analyticsUmamiSrc: 'analytics.umami.src',
+  analyticsUmamiId: 'analytics.umami.id',
 } as const;
 
 export type SettingKey = (typeof SETTING_KEYS)[keyof typeof SETTING_KEYS];
@@ -119,6 +155,8 @@ export interface AdminSettingField {
   label: string;
   hint?: string;
   envKey?: string;
+  /** Tipo de input a renderizar en el panel. */
+  inputType: 'url' | 'text';
   /** Valor efectivo actual (panel o .env). */
   value: string;
   source: SettingSource;
@@ -181,6 +219,7 @@ export async function getAdminSettings(): Promise<AdminSettingField[]> {
       label: def.label,
       hint: def.hint,
       envKey: def.envKey,
+      inputType: def.inputType ?? 'url',
       value: fromDb ?? fromEnv ?? '',
       source,
       fromEnv,
@@ -211,4 +250,24 @@ export async function saveSettings(values: Record<string, unknown>): Promise<str
     saved.push(def.key);
   }
   return saved;
+}
+
+// ----------------------------------------------------------------------------
+// Analítica: config resuelta (panel > .env) lista para inyectar en el layout.
+// ----------------------------------------------------------------------------
+export interface AnalyticsConfig {
+  ga4Id: string | null;
+  plausibleDomain: string | null;
+  umamiSrc: string | null;
+  umamiWebsiteId: string | null;
+}
+
+export async function getAnalyticsConfig(): Promise<AnalyticsConfig> {
+  const db = await getSettingsMap();
+  return {
+    ga4Id: resolveKey(SETTING_KEYS.analyticsGa4, db),
+    plausibleDomain: resolveKey(SETTING_KEYS.analyticsPlausible, db),
+    umamiSrc: resolveKey(SETTING_KEYS.analyticsUmamiSrc, db),
+    umamiWebsiteId: resolveKey(SETTING_KEYS.analyticsUmamiId, db),
+  };
 }

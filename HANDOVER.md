@@ -16,6 +16,7 @@ la ponga a andar en minutos. Pensado para acompañar una venta de activo
 | Marca | Logos (`public/logo.png`, `favicon.png`), paleta, textos |
 | i18n | 6 idiomas: en, es, it, ko, ru, zh |
 | Monetización | Página `/pricing` lista (planes + Mecenas), provider-agnostic |
+| SEO / analítica | `sitemap.xml`, `robots.txt`, Open Graph (`public/og.png`) y analítica enchufable (GA4 / Plausible / Umami) + atribución UTM |
 | Deploy | Instrucciones para Hostinger (Node) |
 
 ## 2. Qué NO se transfiere
@@ -31,8 +32,9 @@ la ponga a andar en minutos. Pensado para acompañar una venta de activo
 
 No hace falta editar `.env` ni rebuild: en **`/admin`** (menú del avatar, solo
 para usuarios con `User.isAdmin = true`) el dueño pega los links de pago, de
-donación y de la Print Shop. Se guardan en la tabla `Setting` y **tienen
-prioridad** sobre las variables de entorno. Un campo vacío = se usa el `.env`.
+donación, de la Print Shop y la config de **analítica**. Se guardan en la tabla
+`Setting` y **tienen prioridad** sobre las variables de entorno. Un campo vacío
+= se usa el `.env`.
 
 Para dar acceso de admin: `npx prisma studio` → `User` → `isAdmin = true`.
 
@@ -127,6 +129,28 @@ La ruta `/nft` muestra las creaciones del miembro como **coleccionables** con
 - El puntaje de prestigio se calcula en `app/nft/page.tsx` (pesos editables).
 - Métrica pendiente: **visitas** (no existe campo `views` en `Post` todavía).
 - Fase 2 sugerida: motor de puntaje persistido + acuñado on-chain + marketplace.
+
+### 4.3 SEO y analítica (medir el embudo)
+
+- **SEO**
+  - `app/sitemap.ts` → `/sitemap.xml` (rutas públicas; las privadas/gated quedan fuera).
+  - `app/robots.ts` → `/robots.txt` (bloquea `/admin`, `/api/`, auth, `/merch`, `/nft`, `/adults`).
+  - `app/layout.tsx` → `metadataBase`, Open Graph y Twitter Card. Imagen: `public/og.png` (1200×630).
+  - URL canónica: `NEXT_PUBLIC_SITE_URL` (fallback: `AUTH_URL` → `watusee.fun`). Ver `lib/site.ts`.
+  - Página por defecto en inglés; el resto de idiomas comparte la misma URL (sin `hreflang` todavía).
+- **Analítica** (elegí un proveedor; también se carga desde `/admin`):
+  - Google Analytics 4 → `NEXT_PUBLIC_GA4_ID` (`G-XXXXXXXXXX`).
+  - Plausible → `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`.
+  - Umami → `NEXT_PUBLIC_UMAMI_SRC` + `NEXT_PUBLIC_UMAMI_WEBSITE_ID`.
+  - Se inyecta en `components/Analytics.tsx`; sin config no se carga nada.
+- **Atribución UTM (first-touch)**: `lib/attribution.ts` guarda el primer toque
+  (`utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `utm_term`, `ref`,
+  `landing`, `referrer`) en `localStorage` + cookie, y se asocia al usuario al
+  registrarse (`User.signupSource`, JSON acotado). Los registros por OAuth
+  (Google) no pasan por `/api/register`, así que quedan sin atribución.
+
+> Para lanzar campañas, usá links con UTM, por ejemplo:
+> `https://watusee.fun/?utm_source=tiktok&utm_medium=social&utm_campaign=lanzamiento`
 
 ## 5. Puesta en marcha (comprador)
 

@@ -4,21 +4,70 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
+import Analytics from "@/components/Analytics";
+import AttributionCapture from "@/components/AttributionCapture";
 import { auth } from "@/auth";
+import { getAnalyticsConfig, type AnalyticsConfig } from "@/lib/settings";
+import {
+  SITE_NAME,
+  SITE_TAGLINE,
+  SITE_DESCRIPTION,
+  SITE_LOCALE,
+} from "@/lib/site";
+import { getRequestSiteUrl } from "@/lib/site-url";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "WatUSee | See the Unseen",
-  description: "A social network for Pareidolia creators. Discover and share the hidden shapes in the world.",
-  icons: {
-    icon: [{ url: '/favicon.png', sizes: '32x32', type: 'image/png' }],
-    apple: '/logo.png',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const siteUrl = await getRequestSiteUrl();
+  return {
+    metadataBase: new URL(siteUrl),
+    title: `${SITE_NAME} | ${SITE_TAGLINE}`,
+    description: SITE_DESCRIPTION,
+    applicationName: SITE_NAME,
+    keywords: [
+      "pareidolia",
+      "WatUSee",
+      "social network",
+      "brain games",
+      "optical illusions",
+      "creativity",
+      "see the unseen",
+    ],
+    alternates: {
+      canonical: "/",
+    },
+    icons: {
+      icon: [{ url: '/favicon.png', sizes: '32x32', type: 'image/png' }],
+      apple: '/logo.png',
+    },
+    openGraph: {
+      type: "website",
+      siteName: SITE_NAME,
+      locale: SITE_LOCALE,
+      url: "/",
+      title: `${SITE_NAME} | ${SITE_TAGLINE}`,
+      description: SITE_DESCRIPTION,
+      images: [
+        {
+          url: "/og.png",
+          width: 1200,
+          height: 630,
+          alt: `${SITE_NAME} — ${SITE_TAGLINE}`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${SITE_NAME} | ${SITE_TAGLINE}`,
+      description: SITE_DESCRIPTION,
+      images: ["/og.png"],
+    },
+  };
+}
 
 export const viewport = {
   width: 'device-width',
@@ -27,12 +76,21 @@ export const viewport = {
   viewportFit: 'cover',
 };
 
+async function loadAnalytics(): Promise<AnalyticsConfig> {
+  try {
+    return await getAnalyticsConfig();
+  } catch {
+    return { ga4Id: null, plausibleDomain: null, umamiSrc: null, umamiWebsiteId: null };
+  }
+}
+
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   const session = await auth();
+  const analytics = await loadAnalytics();
   return (
     <html
       lang="en"
@@ -45,8 +103,11 @@ export default async function RootLayout({
             {children}
           </main>
           <Footer />
+          <AttributionCapture />
+          <Analytics config={analytics} />
         </Providers>
       </body>
     </html>
   );
 }
+

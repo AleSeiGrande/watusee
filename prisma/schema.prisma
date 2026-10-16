@@ -53,6 +53,9 @@ model User {
   isAdmin      Boolean        @default(false)
   subscriptions Subscription[]
   payments      PaymentEvent[]
+
+  // Atribución de crecimiento: primer toque UTM/referrer al registrarse.
+  signupSource String?
 }
 
 model Post {

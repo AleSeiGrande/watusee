@@ -7,6 +7,7 @@ import {
   CreditCard,
   Heart,
   Shirt,
+  BarChart3,
   Save,
   Loader2,
   CheckCircle2,
@@ -39,6 +40,12 @@ const GROUPS: {
     title: 'Print Shop (pedidos)',
     desc: 'Link de tu socio de impresión por producto. El genérico se usa como fallback.',
     Icon: Shirt,
+  },
+  {
+    id: 'analytics',
+    title: 'Analítica (tráfico y campañas)',
+    desc: 'Pegá el ID de tu proveedor para medir visitas y el tráfico de TikTok. Podés usar uno o varios.',
+    Icon: BarChart3,
   },
 ];
 
@@ -112,7 +119,7 @@ export default function AdminSettingsClient({
       <div className="relative max-w-3xl mx-auto">
         <header className="mb-10">
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-3">
-            Configuración de pagos y Print Shop
+            Configuración de pagos, Print Shop y analítica
           </h1>
           <p className="text-gray-400 leading-relaxed">
             Estos links se guardan en la base de datos y tienen prioridad sobre las variables de
@@ -172,11 +179,11 @@ export default function AdminSettingsClient({
                         <div className="flex items-center gap-2">
                           <input
                             id={field.key}
-                            type="url"
-                            inputMode="url"
+                            type={field.inputType}
+                            inputMode={field.inputType === 'url' ? 'url' : 'text'}
                             value={values[field.key] ?? ''}
                             onChange={(e) => setValue(field.key, e.target.value)}
-                            placeholder={field.fromEnv ?? 'https://…'}
+                            placeholder={field.fromEnv ?? (field.inputType === 'url' ? 'https://…' : '')}
                             className="w-full rounded-xl bg-white/5 border border-white/10 focus:border-brand-primary/60 focus:ring-2 focus:ring-brand-primary/20 outline-none px-3 py-2.5 text-sm text-white placeholder:text-gray-600 transition"
                           />
                           {values[field.key] ? (

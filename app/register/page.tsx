@@ -6,6 +6,7 @@ import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useT } from '@/lib/i18n/context';
+import { readAttribution } from '@/lib/attribution';
 
 export default function RegisterPage() {
   const t = useT();
@@ -35,7 +36,13 @@ export default function RegisterPage() {
       const res = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password, dateOfBirth }),
+        body: JSON.stringify({
+          username,
+          email,
+          password,
+          dateOfBirth,
+          attribution: readAttribution(),
+        }),
       });
 
       if (res.ok) {

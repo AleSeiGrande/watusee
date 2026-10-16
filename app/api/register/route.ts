@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sanitizeAttribution } from '@/lib/attribution';
 import bcrypt from 'bcryptjs';
 
 export async function POST(req: Request) {
   try {
-    const { username, email, password, dateOfBirth } = await req.json();
+    const { username, email, password, dateOfBirth, attribution } = await req.json();
 
     if (!username || !email || !password || !dateOfBirth) {
       return NextResponse.json({ error: 'Todos los campos son requeridos' }, { status: 400 });
@@ -47,6 +48,7 @@ export async function POST(req: Request) {
         email,
         password: hashedPassword,
         dateOfBirth: new Date(dateOfBirth),
+        signupSource: sanitizeAttribution(attribution),
       },
     });
 

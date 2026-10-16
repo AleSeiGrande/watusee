@@ -32,6 +32,8 @@ Live product: **https://watusee.fun**
 - Subscription/pricing page with artist-named plans, plus a donation option ("Mecenas").
 - **Print Shop** — turn a creation into a t-shirt, mug or poster.
 - **NFT Gallery** (preview / under construction) — creations as collectibles with a "prestige" score.
+- Technical SEO out of the box: `sitemap.xml`, `robots.txt` and Open Graph/Twitter cards.
+- Pluggable analytics (GA4 / Plausible / Umami) and first-touch **UTM attribution** per signup.
 
 ## Plans
 
@@ -44,6 +46,8 @@ Live product: **https://watusee.fun**
 
 Payments use **provider-agnostic hosted checkout links** (Stripe Payment Links, Paddle, Lemon Squeezy, …) driven by
 environment variables — switching provider means changing URLs, not code. See `.env.example`.
+You can also paste every link (checkout, donation, Print Shop and analytics IDs) from the **`/admin`** panel,
+which takes priority over `.env` and needs no redeploy.
 
 ## Tech stack
 
@@ -94,6 +98,10 @@ All variables live in `.env` (never committed). `.env.example` documents each on
 | `NEXT_PUBLIC_DONATE_URL` | Mecenas donation URL (PayPal.me, Ko-fi, Buy Me a Coffee, …) |
 | `NEXT_PUBLIC_MERCH_TSHIRT_URL` / `_MUG_URL` / `_POSTER_URL` | Per-product Print Shop order links (Printful, Gelato, Printify, …) |
 | `NEXT_PUBLIC_MERCH_PARTNER_URL` | Fallback Print Shop order link used when a product link is empty |
+| `NEXT_PUBLIC_SITE_URL` | Canonical public URL (used by sitemap, robots and Open Graph) |
+| `NEXT_PUBLIC_GA4_ID` | Google Analytics 4 Measurement ID (`G-XXXXXXXXXX`) |
+| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Plausible domain (e.g. `watusee.fun`) |
+| `NEXT_PUBLIC_UMAMI_SRC` / `NEXT_PUBLIC_UMAMI_WEBSITE_ID` | Umami script URL + website ID |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret (auto-activates a plan after payment) |
 | `GENERIC_WEBHOOK_SECRET` | Shared secret for `POST /api/webhooks/generic` (any provider, or Zapier/Make) |
 

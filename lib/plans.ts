@@ -1,5 +1,5 @@
 // ============================================================================
-// Planes de WatUSee
+// Planes de WatDuSee
 // ----------------------------------------------------------------------------
 // Este archivo es la ÚNICA fuente de verdad de la página de precios.
 // Para cambiar nombres, precios o features: editá acá.
@@ -23,7 +23,7 @@ export interface PlanDefinition {
   id: string;
   /** Nombre visible: nombre de artista. No se traduce (es un nombre propio). */
   name: string;
-  /** true = plan recomendado / "más elegido". */
+  /** true = plan recomendado / destacado en la página. */
   highlight?: boolean;
   /** Precio mensual en la moneda configurada. 0 = gratis, null = "a voluntad". */
   priceMonthly: number | null;
@@ -44,6 +44,12 @@ export interface ResolvedPlan {
   id: string;
   name: string;
   highlight: boolean;
+  /**
+   * true = plan de pago sin link de checkout configurado: la página de precios
+   * muestra `$$$` + "En construcción" y deshabilita el CTA.
+   * Se resuelve en cada request: pegar un link en `/admin` lo pone a la venta.
+   */
+  comingSoon: boolean;
   priceMonthly: number | null;
   priceYearly: number | null;
   ctaKind: PlanCtaKind;
@@ -60,6 +66,7 @@ export const PLANS: PlanDefinition[] = [
   {
     id: 'banksy',
     name: 'Banksy',
+    highlight: true,
     priceMonthly: 0,
     priceYearly: 0,
     ctaKind: 'free',
@@ -71,9 +78,23 @@ export const PLANS: PlanDefinition[] = [
     ],
   },
   {
+    id: 'mecenas',
+    name: 'Mecenas',
+    highlight: true,
+    priceMonthly: null,
+    priceYearly: null,
+    ctaKind: 'donate',
+    settingDonate: SETTING_KEYS.donate,
+    featureKeys: [
+      'pricing.mecenas.f1',
+      'pricing.mecenas.f2',
+      'pricing.mecenas.f3',
+      'pricing.mecenas.f4',
+    ],
+  },
+  {
     id: 'frida',
     name: 'Frida',
-    highlight: true,
     priceMonthly: 2.99,
     priceYearly: 29,
     ctaKind: 'checkout',
@@ -106,20 +127,6 @@ export const PLANS: PlanDefinition[] = [
       'pricing.davinci.f7',
     ],
   },
-  {
-    id: 'mecenas',
-    name: 'Mecenas',
-    priceMonthly: null,
-    priceYearly: null,
-    ctaKind: 'donate',
-    settingDonate: SETTING_KEYS.donate,
-    featureKeys: [
-      'pricing.mecenas.f1',
-      'pricing.mecenas.f2',
-      'pricing.mecenas.f3',
-      'pricing.mecenas.f4',
-    ],
-  },
 ];
 
 /**
@@ -129,20 +136,24 @@ export const PLANS: PlanDefinition[] = [
  */
 export async function getPlans(): Promise<ResolvedPlan[]> {
   const db = await getSettingsMap();
-  return PLANS.map((plan) => ({
-    id: plan.id,
-    name: plan.name,
-    highlight: Boolean(plan.highlight),
-    priceMonthly: plan.priceMonthly,
-    priceYearly: plan.priceYearly,
-    ctaKind: plan.ctaKind,
-    featureKeys: plan.featureKeys,
-    checkout: {
+  return PLANS.map((plan) => {
+    const checkout = {
       monthly: plan.settingMonthly ? resolveKey(plan.settingMonthly, db) : null,
       yearly: plan.settingYearly ? resolveKey(plan.settingYearly, db) : null,
-    },
-    donateUrl: plan.settingDonate ? resolveKey(plan.settingDonate, db) : null,
-  }));
+    };
+    return {
+      id: plan.id,
+      name: plan.name,
+      highlight: Boolean(plan.highlight),
+      comingSoon: plan.ctaKind === 'checkout' && !checkout.monthly && !checkout.yearly,
+      priceMonthly: plan.priceMonthly,
+      priceYearly: plan.priceYearly,
+      ctaKind: plan.ctaKind,
+      featureKeys: plan.featureKeys,
+      checkout,
+      donateUrl: plan.settingDonate ? resolveKey(plan.settingDonate, db) : null,
+    };
+  });
 }
 
 export async function getPlanById(id: string): Promise<ResolvedPlan | undefined> {

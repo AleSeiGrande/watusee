@@ -34,6 +34,13 @@ export default function PricingClient({ plans, isLoggedIn, currency, userId, use
   const [interval, setInterval] = useState<BillingInterval>('monthly');
 
   /**
+   * true = hay planes de pago activos (con precio real y link de checkout).
+   * Si todos los planes de pago están "en construcción" no se muestran ni el
+   * selector mensual/anual ni la fila de confianza sobre el cobro.
+   */
+  const hasLivePrices = plans.some((p) => p.ctaKind === 'checkout' && !p.comingSoon);
+
+  /**
    * Adjunta la identidad del usuario y el plan al link de checkout
    * (`client_reference_id`, que Stripe interpreta nativamente) para que el
    * webhook sepa a quién activarle el plan. Los proveedores que no lo entienden
@@ -112,27 +119,29 @@ export default function PricingClient({ plans, isLoggedIn, currency, userId, use
           </p>
 
           {/* Billing toggle */}
-          <div className="inline-flex items-center gap-1 mt-8 p-1 rounded-full glass-panel">
-            <button
-              onClick={() => setInterval('monthly')}
-              className={`px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
-                interval === 'monthly' ? 'bg-brand-primary text-white' : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              {t('pricing.monthly')}
-            </button>
-            <button
-              onClick={() => setInterval('yearly')}
-              className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
-                interval === 'yearly' ? 'bg-brand-primary text-white' : 'text-gray-400 hover:text-white'
-              }`}
-            >
-              {t('pricing.yearly')}
-              <span className="hidden sm:inline text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-accent/20 text-brand-accent">
-                {t('pricing.yearlyBadge')}
-              </span>
-            </button>
-          </div>
+          {hasLivePrices && (
+            <div className="inline-flex items-center gap-1 mt-8 p-1 rounded-full glass-panel">
+              <button
+                onClick={() => setInterval('monthly')}
+                className={`px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
+                  interval === 'monthly' ? 'bg-brand-primary text-white' : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                {t('pricing.monthly')}
+              </button>
+              <button
+                onClick={() => setInterval('yearly')}
+                className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm font-semibold transition-colors ${
+                  interval === 'yearly' ? 'bg-brand-primary text-white' : 'text-gray-400 hover:text-white'
+                }`}
+              >
+                {t('pricing.yearly')}
+                <span className="hidden sm:inline text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-accent/20 text-brand-accent">
+                  {t('pricing.yearlyBadge')}
+                </span>
+              </button>
+            </div>
+          )}
         </header>
 
         {/* Plan cards */}
@@ -155,7 +164,7 @@ export default function PricingClient({ plans, isLoggedIn, currency, userId, use
                 {plan.highlight && (
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-1 px-3 py-1 rounded-full bg-brand-primary text-white text-[11px] font-bold uppercase tracking-wide shadow-lg">
                     <Star className="w-3 h-3 fill-current" />
-                    {t('pricing.popular')}
+                    {t(`pricing.${plan.id}.badge`)}
                   </span>
                 )}
 
@@ -179,7 +188,14 @@ export default function PricingClient({ plans, isLoggedIn, currency, userId, use
 
                 {/* Price */}
                 <div className="mb-6 min-h-[64px]">
-                  {plan.ctaKind === 'free' ? (
+                  {plan.comingSoon ? (
+                    <div>
+                      <span className="text-4xl font-bold text-white">$$$</span>
+                      <p className="text-xs text-brand-accent mt-2 font-semibold uppercase tracking-wide">
+                        {t('pricing.comingSoon')}
+                      </p>
+                    </div>
+                  ) : plan.ctaKind === 'free' ? (
                     <span className="text-4xl font-bold text-white">{t('pricing.free')}</span>
                   ) : plan.ctaKind === 'donate' ? (
                     <span className="text-2xl font-bold text-white">{t('pricing.custom')}</span>
@@ -193,7 +209,7 @@ export default function PricingClient({ plans, isLoggedIn, currency, userId, use
                       </span>
                     </div>
                   )}
-                  {saving !== null && (
+                  {saving !== null && !plan.comingSoon && (
                     <p className="text-xs text-brand-accent mt-2 font-medium">
                       {t('pricing.saveYear', { percent: String(saving) })}
                     </p>
@@ -201,7 +217,16 @@ export default function PricingClient({ plans, isLoggedIn, currency, userId, use
                 </div>
 
                 {/* CTA */}
-                {external ? (
+                {plan.comingSoon ? (
+                  <button
+                    type="button"
+                    disabled
+                    aria-disabled="true"
+                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm bg-white/5 text-gray-400 border border-dark-glass-border cursor-not-allowed"
+                  >
+                    {t('pricing.cta.soon')}
+                  </button>
+                ) : external ? (
                   <a href={href} target="_blank" rel="noopener noreferrer" className={ctaClass(plan)}>
                     {ctaLabel(plan)}
                     <ArrowRight className="w-4 h-4" />
@@ -212,7 +237,7 @@ export default function PricingClient({ plans, isLoggedIn, currency, userId, use
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 )}
-                {unavailable && plan.ctaKind !== 'free' && (
+                {!plan.comingSoon && unavailable && plan.ctaKind !== 'free' && (
                   <p className="text-[11px] text-gray-500 text-center mt-2">{t('pricing.checkoutSoon')}</p>
                 )}
 
@@ -249,22 +274,28 @@ export default function PricingClient({ plans, isLoggedIn, currency, userId, use
 
         {/* Trust row */}
         <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 mt-12 text-sm text-gray-500">
-          <span className="inline-flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-brand-accent" />
-            {t('pricing.trust.secure')}
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <BadgeCheck className="w-4 h-4 text-brand-accent" />
-            {t('pricing.trust.cancel')}
-          </span>
+          {hasLivePrices && (
+            <>
+              <span className="inline-flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-brand-accent" />
+                {t('pricing.trust.secure')}
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <BadgeCheck className="w-4 h-4 text-brand-accent" />
+                {t('pricing.trust.cancel')}
+              </span>
+            </>
+          )}
           <span className="inline-flex items-center gap-2">
             <Heart className="w-4 h-4 text-brand-secondary" />
             {t('pricing.trust.support')}
           </span>
         </div>
-        <p className="text-center text-xs text-gray-600 mt-4">
-          {t('pricing.vatNote', { currency })}
-        </p>
+        {hasLivePrices && (
+          <p className="text-center text-xs text-gray-600 mt-4">
+            {t('pricing.vatNote', { currency })}
+          </p>
+        )}
 
         {/* FAQ */}
         <section className="max-w-3xl mx-auto mt-20">
@@ -272,7 +303,7 @@ export default function PricingClient({ plans, isLoggedIn, currency, userId, use
             {t('pricing.faq.title')}
           </h2>
           <div className="flex flex-col gap-3">
-            {[1, 2, 3, 4].map((n) => (
+            {(hasLivePrices ? [1, 2, 3, 4] : [4]).map((n) => (
               <details
                 key={n}
                 className="glass-panel rounded-2xl border border-dark-glass-border px-5 sm:px-6 py-4 group"

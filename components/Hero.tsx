@@ -52,7 +52,7 @@ export default function Hero() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <span className="text-sm sm:text-base font-semibold tracking-widest text-brand-accent uppercase mb-2 block">
-          WatUSee
+          WatDuSee
         </span>
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 text-gradient leading-none">
           {t('hero.whatyousee')}

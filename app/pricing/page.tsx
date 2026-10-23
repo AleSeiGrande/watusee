@@ -4,9 +4,9 @@ import { getPlans, CURRENCY } from '@/lib/plans';
 import PricingClient from '@/components/PricingClient';
 
 export const metadata: Metadata = {
-  title: 'Planes y precios | WatUSee',
+  title: 'Planes y precios | WatDuSee',
   description:
-    'Elegí tu plan en WatUSee. Empezá gratis con Banksy, crecé con Frida o Da Vinci, o apoyá el proyecto como Mecenas.',
+    'Elegí tu plan en WatDuSee. Empezá gratis con Banksy, crecé con Frida o Da Vinci, o apoyá el proyecto como Mecenas.',
 };
 
 export const dynamic = 'force-dynamic';

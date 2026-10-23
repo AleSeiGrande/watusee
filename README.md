@@ -1,12 +1,12 @@
-# WatUSee
+# WatDuSee
 
 > Every cloud has a face. Find it, capture it, share it — and turn pareidolia into a game.
 
-**WatUSee** is a social web app built around [pareidolia](https://en.wikipedia.org/wiki/Pareidolia): the human
+**WatDuSee** is a social web app built around [pareidolia](https://en.wikipedia.org/wiki/Pareidolia): the human
 tendency to see faces, animals and shapes in clouds, walls, coffee foam — anything. Users trace what they see
 on an image, publish it, and the community reacts, remixes it and plays mini-games with it.
 
-Live product: **https://watusee.fun**
+Live product: **https://watdusee.fun**
 
 ---
 
@@ -38,12 +38,17 @@ Live product: **https://watusee.fun**
 
 ## Plans
 
-| Plan | Role | Price | Highlights |
-| --- | --- | --- | --- |
-| **Banksy** | Free | $0 | Create, share, play |
-| **Frida** | Creator | $2.99/mo · $29/yr | HD downloads without watermark, 6 images per story, Print Shop |
-| **Da Vinci** | Studio | $4.99/mo · $49/yr | Everything in Frida + Echo Pro tools, Dual Puzzle, advanced stats, early access, NFT Gallery |
-| **Mecenas** | Donation | Name your price | Support the project, patron badge, thanks page |
+| Plan | Role | Price | Status | Highlights |
+| --- | --- | --- | --- | --- |
+| **Banksy** | Free | $0 | Live | Create, share, play |
+| **Mecenas** | Donation | Name your price | Live | Support the project, patron badge, thanks page |
+| **Frida** | Creator | $$$ ($2.99/mo · $29/yr) | Under construction | HD downloads without watermark, 6 images per story, Print Shop |
+| **Da Vinci** | Studio | $$$ ($4.99/mo · $49/yr) | Under construction | Everything in Frida + Echo Pro tools, Dual Puzzle, advanced stats, early access, NFT Gallery |
+
+The pricing page leads with the two live plans (Free + Mecenas, both highlighted). A paid plan is marked
+**"Under construction"** — `$$$` instead of the price and a disabled CTA — until a checkout URL exists. Paste the URL
+in **`/admin`** and the plan flips to its real price and active CTA on the next request: no code change, no redeploy.
+(The exact logic lives in `getPlans()` in `lib/plans.ts`.)
 
 Payments use **provider-agnostic hosted checkout links** (Stripe Payment Links, Paddle, Lemon Squeezy, …) driven by
 environment variables — switching provider means changing URLs, not code. See `.env.example`.
@@ -101,7 +106,7 @@ All variables live in `.env` (never committed). `.env.example` documents each on
 | `NEXT_PUBLIC_MERCH_PARTNER_URL` | Fallback Print Shop order link used when a product link is empty |
 | `NEXT_PUBLIC_SITE_URL` | Canonical public URL (used by sitemap, robots and Open Graph) |
 | `NEXT_PUBLIC_GA4_ID` | Google Analytics 4 Measurement ID (`G-XXXXXXXXXX`) |
-| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Plausible domain (e.g. `watusee.fun`) |
+| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Plausible domain (e.g. `watdusee.fun`) |
 | `NEXT_PUBLIC_UMAMI_SRC` / `NEXT_PUBLIC_UMAMI_WEBSITE_ID` | Umami script URL + website ID |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret (auto-activates a plan after payment) |
 | `GENERIC_WEBHOOK_SECRET` | Shared secret for `POST /api/webhooks/generic` (any provider, or Zapier/Make) |

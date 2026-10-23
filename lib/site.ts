@@ -6,13 +6,13 @@
 // Si no hay ninguna variable, se usa el dominio oficial como fallback.
 // ============================================================================
 
-export const SITE_NAME = 'WatUSee';
+export const SITE_NAME = 'WatDuSee';
 export const SITE_TAGLINE = 'See the Unseen';
 export const SITE_DESCRIPTION =
   'A social network for Pareidolia creators. Discover and share the hidden shapes in the world.';
 export const SITE_LOCALE = 'en_US';
 
-const FALLBACK_URL = 'https://watusee.fun';
+const FALLBACK_URL = 'https://watdusee.fun';
 
 /**
  * URL base absoluta del sitio, sin barra final.

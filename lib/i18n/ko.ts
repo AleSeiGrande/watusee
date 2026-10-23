@@ -1,5 +1,5 @@
 export const ko: Record<string, string> = {
-  'nav.logo.alt': 'WatUSee',
+  'nav.logo.alt': 'WatDuSee',
   'nav.play': '탐험',
   'nav.create': '창작',
   'nav.search': '파레이돌리아, 태그, 사용자 검색...',
@@ -113,7 +113,7 @@ export const ko: Record<string, string> = {
   'reset.minLength': 'Password must be at least 6 characters',
   'reset.mismatch': 'Passwords do not match',
 
-  'register.title': 'WatUSee에 가입하세요',
+  'register.title': 'WatDuSee에 가입하세요',
   'register.subtitle': '세상에서 보는 것을 공유하세요',
   'register.user.label': '사용자명',
   'register.user.placeholder': '사용자명',
@@ -310,7 +310,7 @@ export const ko: Record<string, string> = {
   'about.nav': '소개',
   'about.hero.title': '우리 모두 같은 세상을 보지만, 같은 방식으로 보지는 않습니다.',
   'about.hero.subtitle': '구름 속에서 어떤 이는 용을 봅니다. 그림자 속에서 다른 이는 얼굴을 발견합니다. 거기에 아름다움이 있습니다.',
-  'about.concept': 'Watusee는 그 차이를 축하하기 위해 탄생했습니다. 우리는 완벽한 답을 찾지 않습니다. 우리는 다른 사람의 관점에 감탄하는 것을 추구합니다.',
+  'about.concept': 'WatDuSee는 그 차이를 축하하기 위해 탄생했습니다. 우리는 완벽한 답을 찾지 않습니다. 우리는 다른 사람의 관점에 감탄하는 것을 추구합니다.',
   'about.pillars.title': '네 가지 기둥',
   'about.pillars.create.title': '창조',
   'about.pillars.create.desc': '보고 느끼는 것을 표현하세요. 당신의 지각을 자유롭게 하세요.',
@@ -322,7 +322,7 @@ export const ko: Record<string, string> = {
   'about.pillars.resonance.desc': '인기의 문제가 아닙니다. 당신의 시선이 다른 사람들과 얼마나 연결되는지 측정하는 것입니다. 그리고 당신의 부족을 찾는 것입니다.',
   'about.roadmap.title': '로드맵',
   'about.roadmap.desc': '커뮤니티 피드백을 통해 새로운 게임과 개념을 추가하여 콘셉트를 개선할 것입니다. 이를 바탕으로 NFT 아트 마켓플레이스와 새로운 AI 기술과의 연결을 만들겠습니다.',
-  'about.stats.title': 'WatUSee 통계',
+  'about.stats.title': 'WatDuSee 통계',
   'about.stats.users': '사용자',
   'about.stats.imagesUploaded': '업로드된 이미지',
   'about.stats.imagesInterpreted': '해석된 이미지',
@@ -330,7 +330,7 @@ export const ko: Record<string, string> = {
   'about.community.title': '커뮤니티',
   'about.community.desc': '왜냐하면 우리에게는 백만 개의 눈이 있기 때문입니다. 백만 개의 아름다운 현실.',
   'about.cta': '당신은요? 무엇이 보이나요?',
-  'about.ctaCredit': '— Watusee',
+  'about.ctaCredit': '— WatDuSee',
   'about.contact.title': '문의하기',
   'about.contact.desc': '아이디어, 질문이 있거나 그냥 인사하고 싶으신가요? 저희에게 글을 보내주세요.',
   'about.contact.name': '이름',
@@ -341,6 +341,6 @@ export const ko: Record<string, string> = {
   'about.contact.success': '메시지 감사합니다! 곧 답변드리겠습니다.',
   'about.contact.error': '문제가 발생했습니다. 다시 시도해주세요.',
 
-  'meta.title': 'WatUSee | 보이지 않는 것을 보다',
+  'meta.title': 'WatDuSee | 보이지 않는 것을 보다',
   'meta.desc': '파레이돌리아 창작자를 위한 소셜 네트워크. 세상에 숨겨진 형태를 발견하고 공유하세요.',
 } as const;

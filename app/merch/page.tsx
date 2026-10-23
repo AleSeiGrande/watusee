@@ -10,7 +10,7 @@ import T from '@/components/T';
 import MerchClient from '@/components/MerchClient';
 
 export const metadata: Metadata = {
-  title: 'Print Shop | WatUSee',
+  title: 'Print Shop | WatDuSee',
   description:
     'Turn your pareidolia into a t-shirt, a mug or a poster. A plus for Frida and Da Vinci members.',
 };

@@ -153,7 +153,7 @@ export default function AboutPage() {
           </p>
           <p className="text-white text-2xl sm:text-3xl font-bold mt-12 mb-8">{t('about.cta')}</p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo.png" alt="WatUSee" className="h-12 w-auto mx-auto mb-4" />
+          <img src="/logo.png" alt="WatDuSee" className="h-12 w-auto mx-auto mb-4" />
           <p className="text-3xl sm:text-4xl font-bold tracking-tighter text-gradient">— WatUsee —</p>
         </div>
       </section>

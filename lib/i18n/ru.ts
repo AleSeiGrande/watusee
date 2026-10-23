@@ -1,5 +1,5 @@
 export const ru: Record<string, string> = {
-  'nav.logo.alt': 'WatUSee',
+  'nav.logo.alt': 'WatDuSee',
   'nav.play': 'Играть',
   'nav.create': 'Создать',
   'nav.search': 'Поиск парейдолий, тегов, пользователей...',
@@ -113,7 +113,7 @@ export const ru: Record<string, string> = {
   'reset.minLength': 'Password must be at least 6 characters',
   'reset.mismatch': 'Passwords do not match',
 
-  'register.title': 'Присоединяйтесь к WatUSee',
+  'register.title': 'Присоединяйтесь к WatDuSee',
   'register.subtitle': 'Делитесь тем, что вы видите в мире',
   'register.user.label': 'Имя пользователя',
   'register.user.placeholder': 'ваш_логин',
@@ -310,7 +310,7 @@ export const ru: Record<string, string> = {
   'about.nav': 'О нас',
   'about.hero.title': 'Мы все видим один и тот же мир, но не одинаково.',
   'about.hero.subtitle': 'В облаке кто-то видит дракона. В тени другие находят лицо. В этом и заключается красота.',
-  'about.concept': 'Watusee родился, чтобы прославлять это различие. Мы не ищем идеальный ответ. Мы стремимся восхищаться перспективой другого.',
+  'about.concept': 'WatDuSee родился, чтобы прославлять это различие. Мы не ищем идеальный ответ. Мы стремимся восхищаться перспективой другого.',
   'about.pillars.title': 'Четыре столпа',
   'about.pillars.create.title': 'СОЗДАВАЙ',
   'about.pillars.create.desc': 'Выражай то, что видишь и чувствуешь. Освободи свое восприятие.',
@@ -322,7 +322,7 @@ export const ru: Record<string, string> = {
   'about.pillars.resonance.desc': 'Дело не в популярности. Дело в том, насколько твой взгляд созвучен с другими. И в поиске своего племени.',
   'about.roadmap.title': 'План развития',
   'about.roadmap.desc': 'Благодаря отзывам сообщества мы улучшим концепцию, добавив новые игры и идеи. На этой основе мы создадим NFT-маркетплейс искусства и связь с новыми технологиями ИИ.',
-  'about.stats.title': 'WatUSee в цифрах',
+  'about.stats.title': 'WatDuSee в цифрах',
   'about.stats.users': 'Пользователей',
   'about.stats.imagesUploaded': 'Загружено изображений',
   'about.stats.imagesInterpreted': 'Интерпретировано изображений',
@@ -330,7 +330,7 @@ export const ru: Record<string, string> = {
   'about.community.title': 'Сообщество',
   'about.community.desc': 'Потому что для нас миллион глаз. Миллион прекрасных реальностей.',
   'about.cta': 'А ты? Что видишь ты?',
-  'about.ctaCredit': '— Watusee',
+  'about.ctaCredit': '— WatDuSee',
   'about.contact.title': 'Свяжитесь с нами',
   'about.contact.desc': 'Есть идеи, вопросы или просто хотите поздороваться? Напишите нам.',
   'about.contact.name': 'Имя',
@@ -341,6 +341,6 @@ export const ru: Record<string, string> = {
   'about.contact.success': 'Спасибо за ваше сообщение! Мы скоро ответим.',
   'about.contact.error': 'Что-то пошло не так. Попробуйте снова.',
 
-  'meta.title': 'WatUSee | Увидеть невидимое',
+  'meta.title': 'WatDuSee | Увидеть невидимое',
   'meta.desc': 'Социальная сеть для создателей парейдолий. Открывайте и делитесь скрытыми формами в мире.',
 } as const;

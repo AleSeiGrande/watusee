@@ -24,7 +24,7 @@ export interface LegalDoc {
 }
 
 /** Email de contacto legal. Cambialo por el real. */
-export const LEGAL_CONTACT_EMAIL = 'hola@watusee.fun';
+export const LEGAL_CONTACT_EMAIL = 'hola@watdusee.fun';
 
 export const LEGAL_DOCS: Record<LegalDocId, Record<LegalLang, LegalDoc>> = {
   // -------------------------------------------------------------------------
@@ -33,12 +33,12 @@ export const LEGAL_DOCS: Record<LegalDocId, Record<LegalLang, LegalDoc>> = {
       title: 'Terms & Conditions',
       updated: 'Last updated: October 15, 2026',
       intro:
-        'Welcome to WatUSee. These Terms & Conditions ("Terms") govern your use of the website watusee.fun and the WatUSee application (the "Service"). By creating an account or using the Service, you accept these Terms. If you do not agree, please do not use the Service.',
+        'Welcome to WatDuSee. These Terms & Conditions ("Terms") govern your use of the website watdusee.fun and the WatDuSee application (the "Service"). By creating an account or using the Service, you accept these Terms. If you do not agree, please do not use the Service.',
       sections: [
         {
           heading: '1. Description of the Service',
           body: [
-            'WatUSee is a social and games web app built around pareidolia: users upload or create images, mark the shapes they "see", publish them and share them. The Service also includes mini-games and themed sections.',
+            'WatDuSee is a social and games web app built around pareidolia: users upload or create images, mark the shapes they "see", publish them and share them. The Service also includes mini-games and themed sections.',
             'The Service offers free features and paid features (the Frida and Da Vinci plans), as well as voluntary donations (Mecenas) and physical printed products (Print Shop).',
           ],
         },
@@ -92,7 +92,7 @@ export const LEGAL_DOCS: Record<LegalDocId, Record<LegalLang, LegalDoc>> = {
         {
           heading: '9. Intellectual property',
           body: [
-            'The WatUSee name, logo, design and software are owned by the operator of the Service and are protected by applicable law. These Terms do not grant you any rights over them beyond using the Service as intended.',
+            'The WatDuSee name, logo, design and software are owned by the operator of the Service and are protected by applicable law. These Terms do not grant you any rights over them beyond using the Service as intended.',
           ],
         },
         {
@@ -127,12 +127,12 @@ export const LEGAL_DOCS: Record<LegalDocId, Record<LegalLang, LegalDoc>> = {
       title: 'Términos y Condiciones',
       updated: 'Última actualización: 15 de octubre de 2026',
       intro:
-        'Bienvenido a WatUSee. Estos Términos y Condiciones ("Términos") rigen tu uso del sitio watusee.fun y de la aplicación WatUSee (el "Servicio"). Al crear una cuenta o usar el Servicio, aceptás estos Términos. Si no estás de acuerdo, no uses el Servicio.',
+        'Bienvenido a WatDuSee. Estos Términos y Condiciones ("Términos") rigen tu uso del sitio watdusee.fun y de la aplicación WatDuSee (el "Servicio"). Al crear una cuenta o usar el Servicio, aceptás estos Términos. Si no estás de acuerdo, no uses el Servicio.',
       sections: [
         {
           heading: '1. Descripción del Servicio',
           body: [
-            'WatUSee es una aplicación social y de juegos basada en la pareidolia: los usuarios suben o crean imágenes, marcan las formas que "ven", las publican y las comparten. El Servicio también incluye minijuegos y secciones temáticas.',
+            'WatDuSee es una aplicación social y de juegos basada en la pareidolia: los usuarios suben o crean imágenes, marcan las formas que "ven", las publican y las comparten. El Servicio también incluye minijuegos y secciones temáticas.',
             'El Servicio ofrece funciones gratuitas y funciones de pago (los planes Frida y Da Vinci), además de donaciones voluntarias (Mecenas) y productos físicos impresos (Print Shop).',
           ],
         },
@@ -186,7 +186,7 @@ export const LEGAL_DOCS: Record<LegalDocId, Record<LegalLang, LegalDoc>> = {
         {
           heading: '9. Propiedad intelectual',
           body: [
-            'El nombre, el logo, el diseño y el software de WatUSee pertenecen al titular del Servicio y están protegidos por la legislación aplicable. Estos Términos no te otorgan derechos sobre ellos más allá del uso previsto del Servicio.',
+            'El nombre, el logo, el diseño y el software de WatDuSee pertenecen al titular del Servicio y están protegidos por la legislación aplicable. Estos Términos no te otorgan derechos sobre ellos más allá del uso previsto del Servicio.',
           ],
         },
         {
@@ -225,7 +225,7 @@ export const LEGAL_DOCS: Record<LegalDocId, Record<LegalLang, LegalDoc>> = {
       title: 'Privacy Policy',
       updated: 'Last updated: October 15, 2026',
       intro:
-        'This policy explains what personal data we collect, how we use it and what rights you have. The data controller is the operator of WatUSee ("we", "us").',
+        'This policy explains what personal data we collect, how we use it and what rights you have. The data controller is the operator of WatDuSee ("we", "us").',
       sections: [
         {
           heading: '1. Data we collect',
@@ -309,7 +309,7 @@ export const LEGAL_DOCS: Record<LegalDocId, Record<LegalLang, LegalDoc>> = {
       title: 'Política de Privacidad',
       updated: 'Última actualización: 15 de octubre de 2026',
       intro:
-        'Esta política explica qué datos personales recopilamos, cómo los usamos y qué derechos tenés. El responsable del tratamiento es el titular de WatUSee ("nosotros").',
+        'Esta política explica qué datos personales recopilamos, cómo los usamos y qué derechos tenés. El responsable del tratamiento es el titular de WatDuSee ("nosotros").',
       sections: [
         {
           heading: '1. Datos que recopilamos',

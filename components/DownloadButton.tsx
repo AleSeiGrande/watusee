@@ -26,7 +26,7 @@ export default function DownloadButton({ postId, hd }: { postId: string; hd: boo
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `watusee-${postId}${hd ? '-hd' : ''}.png`;
+      a.download = `watdusee-${postId}${hd ? '-hd' : ''}.png`;
       document.body.appendChild(a);
       a.click();
       a.remove();

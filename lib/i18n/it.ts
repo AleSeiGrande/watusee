@@ -1,5 +1,5 @@
 export const it: Record<string, string> = {
-  'nav.logo.alt': 'WatUSee',
+  'nav.logo.alt': 'WatDuSee',
   'nav.play': 'Gioca',
   'nav.create': 'Crea',
   'nav.search': 'Cerca pareidolie, tag, utenti...',
@@ -118,7 +118,7 @@ export const it: Record<string, string> = {
   'reset.minLength': 'Password must be at least 6 characters',
   'reset.mismatch': 'Passwords do not match',
 
-  'register.title': 'Unisciti a WatUSee',
+  'register.title': 'Unisciti a WatDuSee',
   'register.subtitle': 'Condividi ciò che vedi nel mondo',
   'register.user.label': 'Nome utente',
   'register.user.placeholder': 'tuo_username',
@@ -305,7 +305,7 @@ export const it: Record<string, string> = {
   'about.nav': 'Chi siamo',
   'about.hero.title': 'Vediamo tutti lo stesso mondo, ma non allo stesso modo.',
   'about.hero.subtitle': 'In una nuvola, qualcuno vede un drago. In un\'ombra, altri scoprono un volto. È qui che risiede la bellezza.',
-  'about.concept': 'Watusee è nato per celebrare questa differenza. Non cerchiamo la risposta perfetta. Cerchiamo di meravigliarci della prospettiva altrui.',
+  'about.concept': 'WatDuSee è nato per celebrare questa differenza. Non cerchiamo la risposta perfetta. Cerchiamo di meravigliarci della prospettiva altrui.',
   'about.pillars.title': 'Quattro pilastri',
   'about.pillars.create.title': 'CREA',
   'about.pillars.create.desc': 'Esprimi ciò che vedi, ciò che senti. Libera la tua percezione.',
@@ -317,7 +317,7 @@ export const it: Record<string, string> = {
   'about.pillars.resonance.desc': 'Non si tratta di popolarità. Si tratta di misurare quanto il tuo sguardo si connette con gli altri. E di trovare la tua tribù.',
   'about.roadmap.title': 'Roadmap',
   'about.roadmap.desc': 'Attraverso il feedback della comunità, miglioreremo il concetto aggiungendo nuovi giochi e idee. Su questa base, creeremo un mercato d\'arte NFT e una connessione con le nuove tecnologie di IA.',
-  'about.stats.title': 'WatUSee in numeri',
+  'about.stats.title': 'WatDuSee in numeri',
   'about.stats.users': 'Utenti',
   'about.stats.imagesUploaded': 'Immagini caricate',
   'about.stats.imagesInterpreted': 'Immagini interpretate',
@@ -325,7 +325,7 @@ export const it: Record<string, string> = {
   'about.community.title': 'Comunità',
   'about.community.desc': 'Perché per noi, un milione di occhi. Un milione di belle realtà.',
   'about.cta': 'E tu? Cosa vedi?',
-  'about.ctaCredit': '— Watusee',
+  'about.ctaCredit': '— WatDuSee',
   'about.contact.title': 'Contattaci',
   'about.contact.desc': 'Hai idee, domande o vuoi semplicemente salutarci? Scrivici.',
   'about.contact.name': 'Nome',
@@ -336,6 +336,6 @@ export const it: Record<string, string> = {
   'about.contact.success': 'Grazie per il tuo messaggio! Ti risponderemo presto.',
   'about.contact.error': 'Qualcosa è andato storto. Riprova.',
 
-  'meta.title': 'WatUSee | Vedi l\'Invisibile',
+  'meta.title': 'WatDuSee | Vedi l\'Invisibile',
   'meta.desc': 'Un social network per creatori di Pareidolie. Scopri e condividi le forme nascoste nel mondo.',
 };

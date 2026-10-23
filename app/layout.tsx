@@ -30,7 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
     applicationName: SITE_NAME,
     keywords: [
       "pareidolia",
-      "WatUSee",
+      "WatDuSee",
       "social network",
       "brain games",
       "optical illusions",

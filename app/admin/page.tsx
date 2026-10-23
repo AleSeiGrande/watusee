@@ -9,7 +9,7 @@ import AdminSettingsClient from '@/components/AdminSettingsClient';
 import AdminGrantPlan from '@/components/AdminGrantPlan';
 
 export const metadata: Metadata = {
-  title: 'Admin | WatUSee',
+  title: 'Admin | WatDuSee',
 };
 
 export const dynamic = 'force-dynamic';

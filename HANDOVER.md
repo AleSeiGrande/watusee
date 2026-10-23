@@ -1,4 +1,4 @@
-# HANDOVER — Traspaso de WatUSee (watusee.fun)
+# HANDOVER — Traspaso de WatDuSee (watdusee.fun)
 
 Checklist para transferir la app a un nuevo dueño y para que el comprador
 la ponga a andar en minutos. Pensado para acompañar una venta de activo
@@ -10,7 +10,7 @@ la ponga a andar en minutos. Pensado para acompañar una venta de activo
 
 | Activo | Detalle |
 |---|---|
-| Dominio | `watusee.fun` (transferir por escrow / registrador) |
+| Dominio | `watdusee.fun` (transferir por escrow / registrador) |
 | Código | Repositorio completo (Next.js 16 + React 19) |
 | Base de datos | Esquema Prisma (`prisma/schema.prisma`) + datos existentes (opcional) |
 | Marca | Logos (`public/logo.png`, `favicon.png`), paleta, textos |
@@ -24,7 +24,7 @@ la ponga a andar en minutos. Pensado para acompañar una venta de activo
 - **Cuentas de pago** (PayPal, Stripe, Paddle, Lemon Squeezy). Son personales/
   empresariales e **intransferibles**. El comprador crea las suyas.
 - **Secretos y credenciales**: `AUTH_SECRET`, SMTP, claves OAuth (Google), etc.
-- Cualquier cuenta personal (email `@watusee.fun`, redes, analytics).
+- Cualquier cuenta personal (email `@watdusee.fun`, redes, analytics).
 
 > Regla de oro: **nunca** entregues credenciales vivas. El comprador genera las suyas.
 
@@ -64,8 +64,10 @@ La app usa **links de checkout hospedados**. No requiere backend de pagos.
    ```
    Mecenas es ingreso 100% marginal: sin costo operativo. Buen argumento de venta.
 
-Si una URL queda vacía, el botón muestra "próximamente" y lleva a contacto.
-La app **no se rompe**.
+Si una URL queda vacía, el plan de pago aparece en `/pricing` con **`$$$`** en lugar del
+precio, la etiqueta **"En construcción"** y el botón deshabilitado (sin link a contacto).
+En cuanto se pega la URL — en `/admin` o en `.env` — el plan pasa **solo** a precio real y
+botón activo, en el siguiente request: sin redeploy. La app **no se rompe**.
 
 ### 3.2 Activación automática del plan (webhooks)
 
@@ -136,7 +138,7 @@ La ruta `/nft` muestra las creaciones del miembro como **coleccionables** con
   - `app/sitemap.ts` → `/sitemap.xml` (rutas públicas; las privadas/gated quedan fuera).
   - `app/robots.ts` → `/robots.txt` (bloquea `/admin`, `/api/`, auth, `/merch`, `/nft`, `/adults`).
   - `app/layout.tsx` → `metadataBase`, Open Graph y Twitter Card. Imagen: `public/og.png` (1200×630).
-  - URL canónica: `NEXT_PUBLIC_SITE_URL` (fallback: `AUTH_URL` → `watusee.fun`). Ver `lib/site.ts`.
+  - URL canónica: `NEXT_PUBLIC_SITE_URL` (fallback: `AUTH_URL` → `watdusee.fun`). Ver `lib/site.ts`.
   - Página por defecto en inglés; el resto de idiomas comparte la misma URL (sin `hreflang` todavía).
 - **Analítica** (elegí un proveedor; también se carga desde `/admin`):
   - Google Analytics 4 → `NEXT_PUBLIC_GA4_ID` (`G-XXXXXXXXXX`).
@@ -150,7 +152,7 @@ La ruta `/nft` muestra las creaciones del miembro como **coleccionables** con
   (Google) no pasan por `/api/register`, así que quedan sin atribución.
 
 > Para lanzar campañas, usá links con UTM, por ejemplo:
-> `https://watusee.fun/?utm_source=tiktok&utm_medium=social&utm_campaign=lanzamiento`
+> `https://watdusee.fun/?utm_source=tiktok&utm_medium=social&utm_campaign=lanzamiento`
 
 ### 4.4 Descargas HD y más imágenes por historia (Frida / Da Vinci)
 
@@ -158,10 +160,10 @@ Dos features de los planes de pago que **ya funcionan** (antes eran solo copy de
 
 - **Descarga (`/api/download/[id]`)**: ruta `app/api/download/[id]/route.ts` (requiere
   sesión; el botón está en `/post/[id]` vía `components/DownloadButton.tsx`).
-  - Plan gratis: PNG a **máx. 1080px** con **marca de agua** `watusee.fun`
-    (procesado con `sharp`; responde `X-Watusee-Watermarked: 1`).
+  - Plan gratis: PNG a **máx. 1080px** con **marca de agua** `watdusee.fun`
+    (procesado con `sharp`; responde `X-Watdusee-Watermarked: 1`).
   - Frida / Da Vinci (feature `download.hd`): archivo **original a resolución completa,
-    sin marca de agua** (`X-Watusee-Watermarked: 0`).
+    sin marca de agua** (`X-Watdusee-Watermarked: 0`).
   - Acepta `?v=original|interpreted` (por defecto `interpreted`).
 - **Más imágenes por historia**: la feature `story.more_images` permite **hasta 6**
   imágenes por historia (plan gratis: 4). Se aplica en

@@ -5,7 +5,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   
-  /* WatUSee palette - Violet/Rose/Turquoise */
+  /* WatDuSee palette - Violet/Rose/Turquoise */
   --color-brand-primary: #6B4EFF;    /* Violeta eléctrico - Botones, CTAs */
   --color-brand-secondary: #FF6B9D;  /* Rosa fucsia - Accents, likes */
   --color-brand-accent: #00E0C8;     /* Turquesa - Highlights, descubrimientos */

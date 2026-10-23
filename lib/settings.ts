@@ -99,7 +99,7 @@ export const SETTING_DEFS: SettingDef[] = [
     envKey: 'NEXT_PUBLIC_PLAUSIBLE_DOMAIN',
     group: 'analytics',
     label: 'Plausible — dominio',
-    hint: 'Ej: watusee.fun. Usa el script de plausible.io.',
+    hint: 'Ej: watdusee.fun. Usa el script de plausible.io.',
     inputType: 'text',
   },
   {

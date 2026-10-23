@@ -1,5 +1,5 @@
 export const zh: Record<string, string> = {
-  'nav.logo.alt': 'WatUSee',
+  'nav.logo.alt': 'WatDuSee',
   'nav.play': '探索',
   'nav.create': '创作',
   'nav.search': '搜索视错觉、标签、用户...',
@@ -113,7 +113,7 @@ export const zh: Record<string, string> = {
   'reset.minLength': 'Password must be at least 6 characters',
   'reset.mismatch': 'Passwords do not match',
 
-  'register.title': '加入 WatUSee',
+  'register.title': '加入 WatDuSee',
   'register.subtitle': '分享你在世界中看到的东西',
   'register.user.label': '用户名',
   'register.user.placeholder': '你的用户名',
@@ -310,7 +310,7 @@ export const zh: Record<string, string> = {
   'about.nav': '关于我们',
   'about.hero.title': '我们都看到同一个世界，但方式各不相同。',
   'about.hero.subtitle': '在云中，有人看到一条龙。在阴影里，有人发现一张脸。这就是美妙之处。',
-  'about.concept': 'Watusee 的诞生是为了庆祝这种差异。我们不寻找完美的答案。我们寻求对他人的视角感到惊叹。',
+  'about.concept': 'WatDuSee 的诞生是为了庆祝这种差异。我们不寻找完美的答案。我们寻求对他人的视角感到惊叹。',
   'about.pillars.title': '四大支柱',
   'about.pillars.create.title': '创造',
   'about.pillars.create.desc': '表达你所见、所感。释放你的感知。',
@@ -322,7 +322,7 @@ export const zh: Record<string, string> = {
   'about.pillars.resonance.desc': '这不是关于 popularity。而是关于衡量你的目光与他人的连接程度。以及找到你的 tribe。',
   'about.roadmap.title': '发展路线图',
   'about.roadmap.desc': '通过社区反馈，我们将改进概念，添加新游戏和创意。在此基础上，我们将创建NFT艺术市场并与新AI技术连接。',
-  'about.stats.title': 'WatUSee 数据概览',
+  'about.stats.title': 'WatDuSee 数据概览',
   'about.stats.users': '用户',
   'about.stats.imagesUploaded': '已上传图片',
   'about.stats.imagesInterpreted': '已解读图片',
@@ -330,7 +330,7 @@ export const zh: Record<string, string> = {
   'about.community.title': '社区',
   'about.community.desc': '因为对我们来说，一百万只眼睛。一百万个美丽的现实。',
   'about.cta': '而你？你看到了什么？',
-  'about.ctaCredit': '— Watusee',
+  'about.ctaCredit': '— WatDuSee',
   'about.contact.title': '联系我们',
   'about.contact.desc': '有想法、问题或只是想打个招呼？给我们写信。',
   'about.contact.name': '姓名',
@@ -341,6 +341,6 @@ export const zh: Record<string, string> = {
   'about.contact.success': '感谢您的留言！我们会尽快回复。',
   'about.contact.error': '出了点问题，请重试。',
 
-  'meta.title': 'WatUSee | 看见看不见的',
+  'meta.title': 'WatDuSee | 看见看不见的',
   'meta.desc': '视错觉创作者的社交网络。发现并分享世界中隐藏的形状。',
 } as const;

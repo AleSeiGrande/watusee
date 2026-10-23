@@ -6,9 +6,9 @@ import { getPlans } from '@/lib/plans';
 import T from '@/components/T';
 
 export const metadata: Metadata = {
-  title: 'Apoyar a WatUSee | Mecenas',
+  title: 'Apoyar a WatDuSee | Mecenas',
   description:
-    'Apoyá a WatUSee con una contribución voluntaria y ayudá a mantener viva la comunidad de creadores de pareidolia.',
+    'Apoyá a WatDuSee con una contribución voluntaria y ayudá a mantener viva la comunidad de creadores de pareidolia.',
 };
 
 export const dynamic = 'force-dynamic';

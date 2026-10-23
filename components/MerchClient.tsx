@@ -217,7 +217,7 @@ export default function MerchClient({ creations, products, currency }: MerchClie
                 <div className="flex flex-col sm:flex-row gap-3">
                   <a
                     href={image}
-                    download={`watusee-${productId}.png`}
+                    download={`watdusee-${productId}.png`}
                     className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-full bg-dark-surface border border-dark-glass-border text-white font-semibold text-sm hover:border-brand-primary transition-colors"
                   >
                     <Download className="w-4 h-4" />

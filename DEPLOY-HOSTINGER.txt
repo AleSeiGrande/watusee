@@ -1,83 +1,109 @@
-# Filename: DEPLOY-HOSTINGER.txt
+# ============================================================================
+# Deploy de WatDuSee en Hostinger — watdusee.fun
+# ----------------------------------------------------------------------------
+# Estado al escribir esto (23 oct 2026):
+#   - watdusee.fun / watdusee.com: comprados, parkeados en Hostinger (sin app).
+#   - watusee.fun: ONLINE con el código viejo (WatUSee) y su base en
+#     /home/<usuario>/domains/watusee.fun/data/watusee.db
+#
+# La app Node de hPanel queda ATADA al dominio: no se puede "mover" la vieja.
+# Hay que crear una app nueva para watdusee.fun y, si querés conservar los
+# datos, copiar la base y las imágenes. Orden: 1 → 8.
+# ============================================================================
 
-# ===== PASO 1: Subir archivos al hosting =====
-# Usa FTP (FileZilla o similar) para subir TODOS estos archivos
-# a la raíz del hosting (public_html/ o la carpeta que asigne Hostinger).
-#
-# IMPORTANTE: NO subas node_modules/ ni .next/ — se generarán en el servidor.
+# ── 1. Dominio nuevo en hPanel ──────────────────────────────────────────────
+# hPanel → Websites → Add website → watdusee.fun (misma cuenta de hosting).
+# Queda en: /home/<usuario>/domains/watdusee.fun/
+# Después: hPanel → Security → SSL → instalar Let's Encrypt para ese dominio.
 
-# Archivos a subir (todo el proyecto excepto lo ignorado por .gitignore):
-# - app/
-# - components/
-# - lib/
-# - prisma/ (schema.prisma y seed.ts)
-# - public/ (uploads, play, hero)
-# - package.json
-# - package-lock.json
-# - tsconfig.json
-# - next.config.ts
-# - postcss.config.mjs
-# - tailwind.config.ts (si existe)
-# - eslint.config.mjs
-# - auth.ts
-# - proxy.ts
-# - AGENTS.md
-# - CLAUDE.md
-# - .env.production.example
+# ── 2. App Node.js nueva ────────────────────────────────────────────────────
+# hPanel → Websites → watdusee.fun → Advanced → Node.js → Create application
+#   Node.js version ....... 20.x
+#   Application root ....... public_html
+#   Application URL ........ https://watdusee.fun
+#   Startup file ........... start.js      (equivale a `npm run start`)
+#   Mode ................... Production
 
-# ===== PASO 2: Activar Node.js en hPanel =====
-# 1. Entra a hPanel → Hosting → Administrar → Node.js
-# 2. Crea una nueva aplicación Node.js:
-#    - Domain/Subdomain: whatusee.fun
-#    - Document root: (el directorio donde subiste los archivos)
-#    - Node.js version: 20.x
-#    - Mode: Production
-#    - Entry point: npm run start
-# 3. Haz clic en "Create"
+# ── 3. Subir el código ──────────────────────────────────────────────────────
+# Opción A (recomendada): SSH + git
+#   hPanel → Advanced → SSH Access → Enable
+#   ssh u<usuario>@watdusee.fun
+#   cd ~/domains/watdusee.fun/public_html
+#   ls -la                                  # si hay index.html de parking, borralo
+#   git clone https://github.com/<github-user>/<repo>.git .
+#
+#   Repo privado: usá un token (https://<token>@github.com/...) o subí un ZIP.
+#
+# Opción B: File Manager / FTP. Subí el proyecto SIN node_modules/ ni .next/.
+#   NO subas el .env local: las variables van en el panel (paso 4).
 
-# ===== PASO 3: Variables de entorno =====
-# En la misma sección Node.js, ve a "Environment Variables" y añade:
+# ── 4. Variables de entorno (panel Node.js → Environment variables) ─────────
+#   OJO: DATABASE_URL tiene que ser EXACTAMENTE esta ruta. setup-db.js calcula
+#   esa misma ruta desde el CWD durante el build; si el panel dice otra cosa,
+#   el build crea una base y la app en runtime lee otra (sitio vacío).
+#   DATABASE_URL          file:/home/<usuario>/domains/watdusee.fun/data/watusee.db
+#   AUTH_SECRET           <32+ caracteres aleatorios>
+#   AUTH_URL              https://watdusee.fun
+#   NEXT_PUBLIC_SITE_URL  https://watdusee.fun     ← setear ANTES del build
+#   NODE_ENV              production
 #
-#  Name: DATABASE_URL
-#  Value: file:./prod.db
+#   Opcionales: SMTP_HOST / SMTP_PORT / SMTP_USER / SMTP_PASS / SMTP_FROM
+#   (sin SMTP no se puede recuperar contraseña ni enviar el formulario de contacto)
 #
-#  Name: AUTH_SECRET
-#  Value: (genera una cadena larga aleatoria, ej: openssl rand -base64 32)
+#   Generar el secreto:
+#     node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 #
-#  Name: NODE_ENV
-#  Value: production
+#   Los links de checkout, la donación, el Print Shop y el ID de analítica se
+#   cargan desde /admin (tienen prioridad sobre .env). No hacen falta acá.
 
-# ===== PASO 4: SSH y construir =====
-# 1. Ve a hPanel → Advanced → SSH Access → Activar
-# 2. Conéctate por SSH:
-#    ssh u123456789@whatusee.fun
-# 3. Navega a la carpeta del proyecto:
-#    cd public_html  (o la carpeta que Hostinger asigne)
-#
-# 4. Instala dependencias:
-#    npm install
-#
-# 5. Genera Prisma Client + crea DB:
-#    npx prisma generate
-#    npx prisma db push
-#
-# 6. Construye la app:
-#    npm run build
-#
-# 7. (Opcional) Pobla DB con datos iniciales:
-#    npm run seed
-#
-# 8. Sal de SSH:
-#    exit
+# ── 5. Instalar, construir, arrancar ────────────────────────────────────────
+#   cd ~/domains/watdusee.fun/public_html
+#   npm install
+#   npm run build        # setup-db.js crea data/ + prisma db push; después next build
+#   # hPanel → Node.js → Restart   (o Stop + Start)
 
-# ===== PASO 5: Iniciar la app =====
-# 1. En hPanel → Node.js → tu app → haz clic en "Start" o "Restart"
-# 2. Espera unos segundos y visita https://whatusee.fun
-# 3. Para ver logs: hPanel → Node.js → Logs
+# ── 6. Migrar datos del sitio viejo (SOLO si querés conservar usuarios/posts) ─
+#   OLD=~/domains/watusee.fun
+#   NEW=~/domains/watdusee.fun
+#   mkdir -p "$NEW/data"
+#   cp -a "$OLD/data/watusee.db" "$NEW/data/watusee.db"
+#   cp -a "$OLD/data/uploads" "$NEW/data/" 2>/dev/null
+#   mkdir -p "$NEW/public_html/public/uploads" "$NEW/public_html/public/play/uploads"
+#   cp -a "$OLD/public_html/public/uploads/." "$NEW/public_html/public/uploads/" 2>/dev/null
+#   cp -a "$OLD/public_html/public/play/uploads/." "$NEW/public_html/public/play/uploads/" 2>/dev/null
+#   cd "$NEW/public_html" && npm run build     # aplica el campo nuevo User.signupSource
+#   # Restart en hPanel
+#
+# Si arrancás de cero (sin datos viejos): saltear este paso y crear el admin:
+#   cd ~/domains/watdusee.fun/public_html
+#   node scripts/create-admin.cjs <usuario> <contraseña>
+#   # opcional, contenido de juegos: npm run seed
 
-# ===== PASO 6: Próximos pasos (opcional) =====
-# Para futuro: migrar de SQLite a MySQL:
-# 1. Crea DB en hPanel → MySQL Databases
-# 2. Actualiza DATABASE_URL: mysql://user:pass@host:port/dbname
-# 3. Corre: npx prisma db push
-# 4. El seed generará datos limpios
+# ── 7. Redirigir todo al dominio oficial ────────────────────────────────────
+# El código ya hace 301 a https://watdusee.fun desde:
+#   www.watdusee.fun · watdusee.com · www.watdusee.com · watusee.fun · www.watusee.fun
+# (siempre que esos dominios apunten a esta misma app Node).
+#
+# Si watdusee.com queda en otra carpeta/hosting:
+#   hPanel → Advanced → Redirects → 301 → https://watdusee.fun
+# Si watusee.fun sigue con la app vieja:
+#   hPanel → Advanced → Redirects → 301 → https://watdusee.fun
+#   (o borrar esa app Node cuando ya no la necesites)
+
+# ── 8. Verificación post-deploy ─────────────────────────────────────────────
+#   [ ] https://watdusee.fun carga y dice "WatDuSee" (nav, footer, título)
+#   [ ] https://watdusee.com y https://www.watdusee.fun → 301 a .fun
+#   [ ] /pricing: Banksy y Mecenas destacados; Frida y Da Vinci con $$$ +
+#       "En construcción" y botón deshabilitado
+#   [ ] /login funciona y /admin abre con el usuario admin
+#   [ ] /sitemap.xml y /robots.txt apuntan a https://watdusee.fun
+#   [ ] Una descarga gratuita sale con marca de agua "watdusee.fun"
+#   [ ] SSL (candado) en .fun y .com
+#   [ ] Google Search Console: propiedad nueva + enviar sitemap.xml
+
+# ── Notas ───────────────────────────────────────────────────────────────────
+# - La DB es SQLite: vive fuera del repo, en data/. No se borra al redeployar.
+# - Si el build falla por memoria en shared hosting, subí la versión de Node o
+#   construí localmente y subí .next/ (última opción).
+# - Para volver al esquema MySQL en el futuro: cambiar DATABASE_URL y correr
+#   `npx prisma db push` con el provider correspondiente en schema.prisma.

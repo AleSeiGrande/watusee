@@ -19,10 +19,10 @@ export async function POST(req: Request) {
     }
 
     await transporter.sendMail({
-      from: process.env.SMTP_FROM || 'noreply@watusee.fun',
-      to: ['brichese@gmail.com', 'main@watusee.fun'],
+      from: process.env.SMTP_FROM || 'noreply@watdusee.fun',
+      to: ['brichese@gmail.com', 'main@watdusee.fun'],
       replyTo: email,
-      subject: `[WatUSee Contact] ${name}`,
+      subject: `[WatDuSee Contact] ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 24px; background: #0a0a1a; border-radius: 16px;">
           <h1 style="color: #fff; font-size: 20px; margin-bottom: 16px;">New contact message</h1>

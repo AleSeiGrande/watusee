@@ -13,8 +13,8 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center gap-3 mb-4">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.png" alt="WatUSee" className="h-8 w-auto" />
-              <span className="text-xl font-bold tracking-tighter text-gradient">WatUSee</span>
+              <img src="/logo.png" alt="WatDuSee" className="h-8 w-auto" />
+              <span className="text-xl font-bold tracking-tighter text-gradient">WatDuSee</span>
             </Link>
             <p className="text-gray-400 text-sm max-w-sm leading-relaxed">
               <T id="footer.tagline" />
@@ -109,7 +109,7 @@ export default function Footer() {
           </nav>
           <span className="order-3 inline-flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-brand-accent" />
-            watusee.fun
+            watdusee.fun
           </span>
         </div>
       </div>

@@ -20,7 +20,7 @@ import { CURRENCY } from '@/lib/plans';
 import T from '@/components/T';
 
 export const metadata: Metadata = {
-  title: 'NFT Gallery | WatUSee',
+  title: 'NFT Gallery | WatDuSee',
   description:
     'Your pareidolia creations as collectibles that earn prestige and value from visits, likes and community metrics. In development.',
 };

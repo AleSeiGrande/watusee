@@ -12,7 +12,7 @@ export const runtime = 'nodejs';
 
 // Ancho máximo de la descarga gratuita (la de pago es el original a tamaño completo).
 const FREE_MAX_WIDTH = 1080;
-const WATERMARK = 'watusee.fun';
+const WATERMARK = 'watdusee.fun';
 
 function safeId(id: string): string {
   return id.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 40) || 'creation';
@@ -65,7 +65,7 @@ export async function GET(
 
     const entitlements = await getEntitlements(session.user.id);
     const hd = entitlements.features.includes('download.hd');
-    const baseName = `watusee-${safeId(post.id)}`;
+    const baseName = `watdusee-${safeId(post.id)}`;
 
     // Plan de pago: sirve el archivo original tal cual, sin marca de agua.
     if (hd) {
@@ -77,7 +77,7 @@ export async function GET(
           'Content-Type': contentTypeFor(full),
           'Content-Disposition': `attachment; filename="${baseName}-hd${ext}"`,
           'Cache-Control': 'private, no-store',
-          'X-Watusee-Watermarked': '0',
+          'X-Watdusee-Watermarked': '0',
         },
       });
     }
@@ -112,7 +112,7 @@ export async function GET(
         'Content-Type': 'image/png',
         'Content-Disposition': `attachment; filename="${baseName}.png"`,
         'Cache-Control': 'private, no-store',
-        'X-Watusee-Watermarked': '1',
+        'X-Watdusee-Watermarked': '1',
       },
     });
   } catch (err) {

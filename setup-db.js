@@ -23,7 +23,7 @@ if (domainMatch) {
     stdio: 'inherit',
     cwd,
     env: { ...process.env },
-    timeout: 30000,
+    timeout: 300000,
   });
 } else {
   console.log(`[setup-db] CWD: ${cwd}, HOME: ${home}`);
@@ -42,7 +42,7 @@ if (domainMatch) {
       stdio: 'inherit',
       cwd,
       env: { ...process.env },
-      timeout: 30000,
+      timeout: 300000,
     });
   } else {
     console.log('[setup-db] No DATABASE_URL with file:/ path, skipping DB setup');

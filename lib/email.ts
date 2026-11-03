@@ -1,21 +1,32 @@
 import nodemailer from 'nodemailer';
 
+const port = parseInt(process.env.SMTP_PORT || '465');
+const secure =
+  process.env.SMTP_SECURE === 'false'
+    ? false
+    : process.env.SMTP_SECURE === 'true'
+    ? true
+    : port === 465;
+
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || '',
-  port: parseInt(process.env.SMTP_PORT || '465'),
-  secure: true,
+  host: process.env.SMTP_HOST || 'smtp.hostinger.com',
+  port,
+  secure,
   auth: {
     user: process.env.SMTP_USER || '',
     pass: process.env.SMTP_PASS || '',
   },
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
 export async function sendPasswordResetEmail(email: string, token: string): Promise<boolean> {
-  const resetUrl = `${process.env.AUTH_URL || 'https://watdusee.fun'}/reset-password?token=${token}`;
+  const resetUrl = `${process.env.AUTH_URL || process.env.NEXT_PUBLIC_SITE_URL || 'https://watdusee.fun'}/reset-password?token=${token}`;
 
   try {
     await transporter.sendMail({
-      from: `"WatDuSee" <${process.env.SMTP_FROM || 'noreply@watdusee.fun'}>`,
+      from: `"WatDuSee" <${process.env.SMTP_FROM || process.env.SMTP_USER || 'noreply@watdusee.fun'}>`,
       to: email,
       subject: 'Reset your WatDuSee password',
       html: `

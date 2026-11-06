@@ -28,6 +28,8 @@ export function getUploadDirs(): string[] {
       path.join(base, 'uploads', 'adults'),
       path.join(base, 'uploads', 'uploads'),
       path.join(base, 'uploads', 'uploads', 'adults'),
+      path.join(base, 'uploads', 'play'),
+      path.join(base, 'uploads', 'play', 'adults'),
       path.join(base, 'play'),
       path.join(base, 'play', 'uploads'),
       path.join(base, 'play', 'uploads', 'adults'),

@@ -21,6 +21,28 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+export function getEmailConfig() {
+  return {
+    host: process.env.SMTP_HOST || 'smtp.hostinger.com',
+    port,
+    secure,
+    user: process.env.SMTP_USER || '',
+    hasPass: Boolean(process.env.SMTP_PASS),
+    hasUser: Boolean(process.env.SMTP_USER),
+    from: process.env.SMTP_FROM || process.env.SMTP_USER || 'noreply@watdusee.fun',
+    authUrl: process.env.AUTH_URL || process.env.NEXT_PUBLIC_SITE_URL || '(no definido)',
+  };
+}
+
+export async function verifyEmailTransport(): Promise<{ ok: boolean; error?: string }> {
+  try {
+    await transporter.verify();
+    return { ok: true };
+  } catch (err: any) {
+    return { ok: false, error: `${err?.code || ''} ${err?.message || String(err)}`.trim() };
+  }
+}
+
 export async function sendPasswordResetEmail(email: string, token: string): Promise<boolean> {
   const resetUrl = `${process.env.AUTH_URL || process.env.NEXT_PUBLIC_SITE_URL || 'https://watdusee.fun'}/reset-password?token=${token}`;
 

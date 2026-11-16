@@ -43,6 +43,49 @@ export async function verifyEmailTransport(): Promise<{ ok: boolean; error?: str
   }
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+export async function sendContactEmail(
+  name: string,
+  email: string,
+  message: string
+): Promise<boolean> {
+  const recipients = (process.env.CONTACT_TO || 'brichese@gmail.com,hola@watdusee.fun')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  try {
+    await transporter.sendMail({
+      from: `"WatDuSee" <${process.env.SMTP_FROM || process.env.SMTP_USER || 'noreply@watdusee.fun'}>`,
+      to: recipients,
+      replyTo: email,
+      subject: `[WatDuSee Contact] ${name}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px 24px; background: #0a0a1a; border-radius: 16px;">
+          <h1 style="color: #fff; font-size: 20px; margin-bottom: 16px;">New contact message</h1>
+          <table style="color: #a0a0b0; font-size: 14px; line-height: 1.6; margin-bottom: 24px;">
+            <tr><td style="padding-right: 12px; font-weight: 600; color: #fff;">From:</td><td>${escapeHtml(name)}</td></tr>
+            <tr><td style="padding-right: 12px; font-weight: 600; color: #fff;">Email:</td><td>${escapeHtml(email)}</td></tr>
+          </table>
+          <div style="background: #1a1a2e; border-radius: 12px; padding: 16px; color: #d0d0e0; font-size: 14px; line-height: 1.6; white-space: pre-wrap;">${escapeHtml(message)}</div>
+        </div>
+      `,
+    });
+    return true;
+  } catch (err: any) {
+    console.error('[Email] Failed to send contact message:', err?.message || err);
+    return false;
+  }
+}
+
 export async function sendPasswordResetEmail(email: string, token: string): Promise<boolean> {
   const resetUrl = `${process.env.AUTH_URL || process.env.NEXT_PUBLIC_SITE_URL || 'https://watdusee.fun'}/reset-password?token=${token}`;
 
